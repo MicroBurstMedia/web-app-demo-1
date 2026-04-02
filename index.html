@@ -1,0 +1,433 @@
+
+<style>
+.sd{padding:1rem 0;font-family:var(--font-sans)}
+.sd-hdr{margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sd-title{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
+.sd-sub{font-size:13px;color:var(--color-text-secondary);margin:0}
+.sd-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+.sd-pill{padding:5px 13px;font-size:12px;font-weight:400;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:background .12s,color .12s;text-align:left}
+.sd-pill.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.sd-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.sd-shdr{padding:.875rem 1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sd-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.08em;white-space:nowrap}
+.sd-stitle{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0}
+.sd-tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto}
+.sd-tab{padding:9px 15px;font-size:13px;border:none;background:transparent;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:color .12s,border-color .12s;flex-shrink:0}
+.sd-tab.on{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.sd-panel{padding:1.125rem 1.25rem;display:none}
+.sd-panel.on{display:block}
+.sd-lbl{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.07em;text-transform:uppercase;margin:0 0 7px}
+.sd-body{font-size:13.5px;color:var(--color-text-secondary);line-height:1.72;margin:0 0 .875rem}
+.sd-body code{font-family:var(--font-mono);font-size:12px;background:var(--color-background-secondary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+pre.sdc{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.875rem 1rem;font-family:var(--font-mono);font-size:11.5px;line-height:1.65;overflow-x:auto;margin:0 0 .875rem;color:var(--color-text-primary);white-space:pre}
+.kw{color:var(--color-text-info)}
+.st{color:var(--color-text-warning)}
+.cm{color:var(--color-text-secondary);font-style:italic}
+.fn{color:var(--color-text-success)}
+.sd-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md);border:0.5px solid;margin-right:6px;margin-bottom:12px}
+.bd-danger{color:var(--color-text-danger);border-color:var(--color-border-danger);background:var(--color-background-danger)}
+.bd-warn{color:var(--color-text-warning);border-color:var(--color-border-warning);background:var(--color-background-warning)}
+.bd-ok{color:var(--color-text-success);border-color:var(--color-border-success);background:var(--color-background-success)}
+.sd-foot{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem;border-top:0.5px solid var(--color-border-tertiary)}
+.sd-btn{padding:6px 14px;font-size:13px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;background:transparent;color:var(--color-text-primary);transition:background .12s}
+.sd-btn:hover:not(:disabled){background:var(--color-background-secondary)}
+.sd-btn:disabled{opacity:.3;cursor:default}
+.sd-prog{font-size:12px;color:var(--color-text-secondary)}
+</style>
+
+<div class="sd">
+<div class="sd-hdr">
+  <p class="sd-title">State of the Stack — Architecture & Debugging Simulation</p>
+  <p class="sd-sub">Senior Systems Architect review · Next.js 16 · FastAPI · PostgreSQL/asyncpg · API-Football (500 req/min)</p>
+</div>
+<div class="sd-stack">
+  <button class="sd-pill on" onclick="goSlide(0)">01 · Network Boundary</button>
+  <button class="sd-pill" onclick="goSlide(1)">02 · Cascading 429</button>
+  <button class="sd-pill" onclick="goSlide(2)">03 · Service Layer</button>
+  <button class="sd-pill" onclick="goSlide(3)">04 · Cache Strategy</button>
+  <button class="sd-pill" onclick="goSlide(4)">05 · UV Audit</button>
+</div>
+
+<div class="sd-card">
+
+<!-- ═══ SLIDE 1 ═══ -->
+<div class="sd-slide" id="sl0">
+  <div class="sd-shdr">
+    <span class="sd-num">SLIDE 01 / 05</span>
+    <p class="sd-stitle">The Next.js 16 Network Boundary</p>
+  </div>
+  <div class="sd-tabs">
+    <button class="sd-tab on" onclick="goTab(0,0)">Current state</button>
+    <button class="sd-tab" onclick="goTab(0,1)">Hypothesis</button>
+    <button class="sd-tab" onclick="goTab(0,2)">Debugged solution</button>
+  </div>
+  <div class="sd-panel on" id="p0-0">
+    <p class="sd-lbl">Architecture context</p>
+    <p class="sd-body">Next.js 16 moves away from the implicit <code>middleware.ts</code> proxy pattern toward an explicit <code>proxy.ts</code> network boundary. Outbound API traffic is no longer a side-effect of the middleware pipeline — it is a declared, testable module. The shift also forces a deliberate split between auth state (server-only) and UI state (client-safe).</p>
+    <p class="sd-lbl">Legacy pattern — middleware.ts (pre-16, implicit)</p>
+<pre class="sdc"><span class="cm">// middleware.ts — implicit proxy, deprecated in Next.js 16</span>
+<span class="kw">export function</span> <span class="fn">middleware</span>(req: NextRequest) {
+  <span class="kw">const</span> token = req.cookies.get(<span class="st">'session_token'</span>);
+  <span class="cm">// Silent URL rewrite — opaque, no explicit auth contract</span>
+  <span class="kw">return</span> NextResponse.rewrite(
+    <span class="kw">new</span> URL(<span class="st">`/api${req.nextUrl.pathname}`</span>, req.url)
+  );
+}
+<span class="cm">// ❌ Any route could reach the backend implicitly</span>
+<span class="cm">// ❌ Token handling scattered across multiple files</span>
+<span class="cm">// ❌ No testable boundary for auth headers</span></pre>
+  </div>
+  <div class="sd-panel" id="p0-1">
+    <p class="sd-lbl">Failure hypothesis</p>
+    <span class="sd-badge bd-danger">HIGH RISK</span><span class="sd-badge bd-warn">SAFARI / ITP</span>
+    <p class="sd-body">Safari's Intelligent Tracking Prevention (ITP) aggressively partitions <code>localStorage</code> in cross-origin iframes and private-browsing contexts. Storing a JWT session token in <code>localStorage</code> creates two distinct failure modes:</p>
+    <p class="sd-body"><strong>1 · Silent purge.</strong> ITP clears the partition without warning, logging the user out mid-session with no network error — the token simply vanishes. <strong>2 · Tab isolation in private mode.</strong> A deep-link opens a new unauthenticated tab; the previous session is invisible to it. Both failures are unreproducible on Chrome/Firefox, making them nearly impossible to diagnose from server logs.</p>
+    <p class="sd-body">Secondary risk: any XSS vector on the page can exfiltrate a <code>localStorage</code> token in a single line. An <code>httpOnly</code> cookie is completely opaque to JavaScript — the attack surface does not exist.</p>
+  </div>
+  <div class="sd-panel" id="p0-2">
+    <p class="sd-lbl">proxy.ts — explicit boundary + cookie split</p>
+<pre class="sdc"><span class="cm">// src/proxy.ts — Next.js 16 explicit network boundary</span>
+<span class="kw">import</span> { cookies } <span class="kw">from</span> <span class="st">'next/headers'</span>;
+
+<span class="kw">export async function</span> <span class="fn">proxyRequest</span>(
+  targetPath: <span class="kw">string</span>,
+  init?: RequestInit
+) {
+  <span class="cm">// httpOnly cookie — never readable by client JS (XSS-proof)</span>
+  <span class="kw">const</span> token = (<span class="kw">await</span> cookies()).get(<span class="st">'session_token'</span>)?.value;
+
+  <span class="kw">return</span> fetch(<span class="st">`${process.env.API_BASE_URL}${targetPath}`</span>, {
+    ...init,
+    headers: {
+      <span class="st">'Authorization'</span>: <span class="st">`Bearer ${token}`</span>,
+      <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+    },
+  });
+}
+
+<span class="cm">// Server Action: set session cookie on login (server-only)</span>
+<span class="kw">export async function</span> <span class="fn">setSessionCookie</span>(token: <span class="kw">string</span>) {
+  (<span class="kw">await</span> cookies()).set(<span class="st">'session_token'</span>, token, {
+    httpOnly: <span class="kw">true</span>,   <span class="cm">// JS-opaque, ITP-safe</span>
+    secure: <span class="kw">true</span>,
+    sameSite: <span class="st">'strict'</span>,
+    maxAge: <span class="kw">60</span> * <span class="kw">60</span> * <span class="kw">24</span>,
+  });
+}
+
+<span class="cm">// localStorage: non-sensitive UI state only (Safari-safe)</span>
+localStorage.setItem(<span class="st">'ui_theme'</span>, <span class="st">'dark'</span>);
+localStorage.setItem(<span class="st">'pinned_league'</span>, leagueId); <span class="cm">// no auth value</span></pre>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2 ═══ -->
+<div class="sd-slide" id="sl1">
+  <div class="sd-shdr">
+    <span class="sd-num">SLIDE 02 / 05</span>
+    <p class="sd-stitle">The API "Cascading 429" Failure Hypothesis</p>
+  </div>
+  <div class="sd-tabs">
+    <button class="sd-tab on" onclick="goTab(1,0)">Current state</button>
+    <button class="sd-tab" onclick="goTab(1,1)">Hypothesis</button>
+    <button class="sd-tab" onclick="goTab(1,2)">Debugged solution</button>
+  </div>
+  <div class="sd-panel on" id="p1-0">
+    <p class="sd-lbl">Environment constraint</p>
+    <p class="sd-body">API-Football enforces a hard cap of <strong>500 requests/minute</strong>. During peak match windows — Champions League knockouts, tournament group stages — concurrent live-score polling from multiple browser tabs can exhaust this budget within seconds. A single unchecked polling loop is enough to cascade into platform-wide 429s.</p>
+    <p class="sd-lbl">Current unguarded route</p>
+<pre class="sdc"><span class="cm">// src/app/api/football/live/route.ts — no circuit breaker</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>() {
+  <span class="kw">const</span> res = <span class="kw">await</span> fetch(FOOTBALL_API_URL, {
+    headers: { <span class="st">'X-RapidAPI-Key'</span>: process.env.API_KEY! }
+  });
+  <span class="kw">return</span> NextResponse.json(<span class="kw">await</span> res.json());
+}
+<span class="cm">// ❌ No X-RateLimit header inspection</span>
+<span class="cm">// ❌ No circuit breaker — crashes at 429 with no warning</span>
+<span class="cm">// ❌ TanStack Query default retry fires 3x on failure → tripling load</span></pre>
+  </div>
+  <div class="sd-panel" id="p1-1">
+    <p class="sd-lbl">Cascade scenario — tournament day</p>
+    <span class="sd-badge bd-danger">CRITICAL</span>
+    <p class="sd-body"><strong>08:00 UTC</strong> · 12 group stage matches kick off simultaneously. TanStack Query refetch intervals across 4 open tabs poll at 30 s each. At 3 concurrent users that is ~48 req/min baseline. Add Vercel edge revalidation and the effective rate climbs to ~300 req/min before 09:00.</p>
+    <p class="sd-body"><strong>09:30 UTC</strong> · A flurry of goals triggers manual refreshes. The counter crosses 500. API returns 429. TanStack Query's default <code>retry: 3</code> fires per hook — tripling the in-flight request count. Every user sees stale scores simultaneously. The cascade is complete and self-reinforcing.</p>
+    <p class="sd-body">Retry storms amplify 429s into sustained blackouts. The root cause is the absence of a pre-emptive <strong>Cool Down</strong> signal — the system should brake at 50 remaining requests, not after hitting zero.</p>
+  </div>
+  <div class="sd-panel" id="p1-2">
+    <p class="sd-lbl">Circuit breaker — X-RateLimit header interception</p>
+<pre class="sdc"><span class="cm">// src/app/api/football/live/route.ts — with circuit breaker</span>
+<span class="kw">import</span> { NextResponse } <span class="kw">from</span> <span class="st">'next/server'</span>;
+
+<span class="kw">const</span> COOLDOWN_THRESHOLD = <span class="kw">50</span>; <span class="cm">// brake before the wall</span>
+
+<span class="kw">export async function</span> <span class="fn">GET</span>() {
+  <span class="kw">const</span> res = <span class="kw">await</span> fetch(FOOTBALL_API_URL, {
+    headers: { <span class="st">'X-RapidAPI-Key'</span>: process.env.API_KEY! }
+  });
+
+  <span class="cm">// Inspect upstream rate-limit headers on every response</span>
+  <span class="kw">const</span> remaining = parseInt(
+    res.headers.get(<span class="st">'X-RateLimit-Requests-Remaining'</span>) ?? <span class="st">'500'</span>
+  );
+  <span class="kw">const</span> resetAt = res.headers.get(<span class="st">'X-RateLimit-Requests-Reset'</span>);
+
+  <span class="kw">if</span> (remaining < COOLDOWN_THRESHOLD) {
+    <span class="cm">// Signal Cool Down before the 429 — serve last-good data</span>
+    <span class="kw">return</span> NextResponse.json(
+      { cooldown: <span class="kw">true</span>, resetAt, data: <span class="kw">await</span> res.json() },
+      { status: <span class="kw">200</span>, headers: { <span class="st">'X-Cooldown'</span>: <span class="st">'true'</span> } }
+    );
+  }
+  <span class="kw">return</span> NextResponse.json(<span class="kw">await</span> res.json());
+}
+
+<span class="cm">// TanStack Query — respect cooldown flag, zero retries on 429</span>
+<span class="kw">const</span> { data } = useQuery({
+  queryKey: [<span class="st">'live-scores'</span>],
+  queryFn: fetchLiveScores,
+  refetchInterval: (q) => q.state.data?.cooldown ? <span class="kw">false</span> : <span class="kw">30_000</span>,
+  retry: <span class="kw">0</span>,  <span class="cm">// never amplify a 429</span>
+});</pre>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3 ═══ -->
+<div class="sd-slide" id="sl2">
+  <div class="sd-shdr">
+    <span class="sd-num">SLIDE 03 / 05</span>
+    <p class="sd-stitle">Backend Integrity & The Service Layer</p>
+  </div>
+  <div class="sd-tabs">
+    <button class="sd-tab on" onclick="goTab(2,0)">Current state</button>
+    <button class="sd-tab" onclick="goTab(2,1)">Hypothesis</button>
+    <button class="sd-tab" onclick="goTab(2,2)">Debugged solution</button>
+  </div>
+  <div class="sd-panel on" id="p2-0">
+    <p class="sd-lbl">Match update data flow</p>
+    <p class="sd-body">API-Football webhooks deliver match events in UTC. The FastAPI router receives the payload, persists it via asyncpg, and the frontend fetches and renders it. The critical architectural question is: at which layer does <code>kickoff_utc → Asia/Taipei</code> conversion occur?</p>
+    <p class="sd-lbl">Anti-pattern — timezone conversion in the router</p>
+<pre class="sdc"><span class="cm"># routers/matches.py — tz logic leaks into the transport layer</span>
+@router.get(<span class="st">"/matches/{match_id}"</span>)
+<span class="kw">async def</span> <span class="fn">get_match</span>(match_id: <span class="kw">int</span>, db: AsyncSession = Depends(get_db)):
+    result = <span class="kw">await</span> db.execute(select(Match).where(Match.id == match_id))
+    match = result.scalar_one_or_none()
+    <span class="cm"># ❌ Conversion duplicated in every router that touches a match</span>
+    taipei = match.kickoff_utc.astimezone(ZoneInfo(<span class="st">"Asia/Taipei"</span>))
+    <span class="kw">return</span> {<span class="st">"kickoff"</span>: taipei.isoformat()}</pre>
+  </div>
+  <div class="sd-panel" id="p2-1">
+    <p class="sd-lbl">Logic leakage — data drift hypothesis</p>
+    <span class="sd-badge bd-danger">DATA DRIFT</span>
+    <p class="sd-body">When timezone conversion lives in the router, every new route that surfaces match data must independently re-implement the offset. Within weeks three variants emerge: one uses <code>ZoneInfo("Asia/Taipei")</code> correctly; a second uses a hardcoded <code>timedelta(hours=8)</code> which breaks on DST edge cases; a third passes raw UTC to the frontend, which converts using the browser's locale — producing three different displayed times for the same kickoff across scoreboard, notifications, and calendar export.</p>
+    <p class="sd-body">This drift is near-impossible to detect in unit tests because each implementation is locally correct. It surfaces only when a user receives a push notification 30 minutes before a match that has already started.</p>
+  </div>
+  <div class="sd-panel" id="p2-2">
+    <p class="sd-lbl">Service Layer pattern + async SQLAlchemy via asyncpg</p>
+<pre class="sdc"><span class="cm"># services/match_service.py — single source of truth for tz conversion</span>
+<span class="kw">from</span> zoneinfo <span class="kw">import</span> ZoneInfo
+<span class="kw">from</span> sqlalchemy.ext.asyncio <span class="kw">import</span> AsyncSession
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> select
+
+TAIPEI = ZoneInfo(<span class="st">"Asia/Taipei"</span>)  <span class="cm"># defined once, referenced everywhere</span>
+
+<span class="kw">class</span> <span class="fn">MatchService</span>:
+    <span class="kw">async def</span> <span class="fn">get_match</span>(
+        self, db: AsyncSession, match_id: <span class="kw">int</span>
+    ) -> MatchSchema | <span class="kw">None</span>:
+        <span class="cm"># Async SQLAlchemy — asyncpg handles the connection pool</span>
+        result = <span class="kw">await</span> db.execute(
+            select(Match).where(Match.id == match_id)
+        )
+        match = result.scalar_one_or_none()
+        <span class="kw">if not</span> match:
+            <span class="kw">return None</span>
+
+        <span class="cm"># UTC → Taipei: happens ONLY here. Never in router, never client-side</span>
+        taipei_time = match.kickoff_utc.astimezone(TAIPEI)
+
+        <span class="kw">return</span> MatchSchema(
+            id=match.id,
+            home_team=match.home_team,
+            away_team=match.away_team,
+            kickoff_taipei=taipei_time,    <span class="cm"># localised once</span>
+            kickoff_utc=match.kickoff_utc, <span class="cm"># raw UTC preserved for logs</span>
+        )
+
+<span class="cm"># routers/matches.py — now thin; zero tz logic</span>
+@router.get(<span class="st">"/matches/{match_id}"</span>)
+<span class="kw">async def</span> <span class="fn">get_match</span>(match_id: <span class="kw">int</span>, svc: MatchService = Depends()):
+    <span class="kw">return await</span> svc.get_match(db, match_id)</pre>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4 ═══ -->
+<div class="sd-slide" id="sl3">
+  <div class="sd-shdr">
+    <span class="sd-num">SLIDE 04 / 05</span>
+    <p class="sd-stitle">Caching Strategy & cacheLife</p>
+  </div>
+  <div class="sd-tabs">
+    <button class="sd-tab on" onclick="goTab(3,0)">Current state</button>
+    <button class="sd-tab" onclick="goTab(3,1)">Hypothesis</button>
+    <button class="sd-tab" onclick="goTab(3,2)">Debugged solution</button>
+  </div>
+  <div class="sd-panel on" id="p3-0">
+    <p class="sd-lbl">Next.js 16 cacheLife API</p>
+    <p class="sd-body"><code>cacheLife()</code> replaces raw <code>revalidate</code> integers with named semantic profiles declared in <code>next.config.ts</code>. Paired with the <code>'use cache'</code> directive, caching intent lives at the function level — not buried in individual <code>fetch()</code> options. This makes cache policy auditable, consistently applied, and easy to tune as rate-limit budgets change.</p>
+    <p class="sd-body">Two profiles are critical for a live football platform: a <strong>seconds</strong> profile for live scores (aggressive refresh, high cost per request) and an <strong>hours</strong> profile for league standings (static data, near-zero ongoing cost).</p>
+  </div>
+  <div class="sd-panel" id="p3-1">
+    <p class="sd-lbl">Budget burn — uniform TTL failure</p>
+    <span class="sd-badge bd-danger">BUDGET BURN</span>
+    <p class="sd-body">Applying <code>revalidate: 60</code> uniformly across all football routes produces simultaneous failures in opposite directions: live match scores become 60 s stale during stoppage time (unacceptable), while league standings — which change at most twice per match day — are re-fetched every minute, burning ~1,440 req/day on data that could be cached for an hour.</p>
+    <p class="sd-body">During a 16-team tournament, uniform 60 s polling consumes roughly 80% of the 500 req/min daily budget on static standing data before a single live event is tracked. The circuit breaker from Slide 2 fires constantly — not because of real load, but because of cache misconfiguration.</p>
+  </div>
+  <div class="sd-panel" id="p3-2">
+    <p class="sd-lbl">Tiered cacheLife — live vs static budget split</p>
+<pre class="sdc"><span class="cm">// next.config.ts — declare named profiles</span>
+<span class="kw">const</span> config: NextConfig = {
+  experimental: {
+    cacheLife: {
+      <span class="st">'live-event'</span>: { stale: <span class="kw">0</span>,   revalidate: <span class="kw">15</span>,   expire: <span class="kw">30</span>   },
+      <span class="st">'standings'</span>: { stale: <span class="kw">300</span>, revalidate: <span class="kw">3600</span>, expire: <span class="kw">86400</span> },
+      <span class="st">'fixtures'</span>:  { stale: <span class="kw">60</span>,  revalidate: <span class="kw">900</span>,  expire: <span class="kw">7200</span>  },
+    }
+  }
+};
+
+<span class="cm">// app/live/scores.tsx — "seconds" profile, high-priority budget</span>
+<span class="kw">async function</span> <span class="fn">getLiveScore</span>(matchId: <span class="kw">string</span>) {
+  <span class="st">'use cache'</span>
+  cacheLife(<span class="st">'live-event'</span>)  <span class="cm">// revalidates every 15 s, stale:0 = always fresh</span>
+  <span class="kw">const</span> res = <span class="kw">await</span> proxyRequest(<span class="st">`/live/${matchId}`</span>);
+  <span class="kw">return</span> res.json();
+}
+
+<span class="cm">// app/standings/[leagueId]/page.tsx — "hours" profile, near-zero cost</span>
+<span class="kw">async function</span> <span class="fn">getStandings</span>(leagueId: <span class="kw">string</span>) {
+  <span class="st">'use cache'</span>
+  cacheLife(<span class="st">'standings'</span>)  <span class="cm">// revalidates hourly → ~24 req/day per league</span>
+  <span class="kw">const</span> res = <span class="kw">await</span> proxyRequest(<span class="st">`/standings/${leagueId}`</span>);
+  <span class="kw">return</span> res.json();
+}
+<span class="cm">// Budget arithmetic: 10 live matches × 4 req/min = 40 req/min live cost</span>
+<span class="cm">// 20 leagues × 1 req/hr = ~0.3 req/min standing cost → 460 req/min headroom</span></pre>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5 ═══ -->
+<div class="sd-slide" id="sl4">
+  <div class="sd-shdr">
+    <span class="sd-num">SLIDE 05 / 05</span>
+    <p class="sd-stitle">The UV & Dependency Management Audit</p>
+  </div>
+  <div class="sd-tabs">
+    <button class="sd-tab on" onclick="goTab(4,0)">Current state</button>
+    <button class="sd-tab" onclick="goTab(4,1)">Hypothesis</button>
+    <button class="sd-tab" onclick="goTab(4,2)">Debugged solution</button>
+  </div>
+  <div class="sd-panel on" id="p4-0">
+    <p class="sd-lbl">Environment baseline</p>
+    <p class="sd-body"><code>uv</code> replaces pip, pip-tools, and virtualenv in a single Rust-native binary. It reads <code>pyproject.toml</code> as the single source of truth and produces a deterministic <code>uv.lock</code> that is platform-portable and sub-second to install. <code>uv sync</code> runs in CI and the Docker build stage, guaranteeing identical dependency trees across dev, staging, and production.</p>
+<pre class="sdc"><span class="cm"># pyproject.toml — canonical dependency declaration</span>
+[project]
+name = <span class="st">"football-api"</span>
+version = <span class="st">"0.1.0"</span>
+requires-python = <span class="st">">=3.12"</span>
+
+dependencies = [
+    <span class="st">"fastapi>=0.115.0"</span>,
+    <span class="st">"sqlalchemy[asyncio]>=2.0.36"</span>,
+    <span class="st">"asyncpg>=0.29.0"</span>,
+    <span class="st">"pydantic>=2.9.2"</span>,
+    <span class="st">"uvicorn[standard]>=0.32.0"</span>,
+    <span class="st">"alembic>=1.14.0"</span>,
+    <span class="st">"python-jose[cryptography]>=3.3.0"</span>,
+]</pre>
+  </div>
+  <div class="sd-panel" id="p4-1">
+    <p class="sd-lbl">Silent drift hypothesis</p>
+    <span class="sd-badge bd-danger">SILENT FAILURE</span>
+    <p class="sd-body">Without a lock file, a <code>pip install -r requirements.txt</code> on a fresh 03:00 UTC deploy can silently pull a minor version bump that breaks an internal API. Common scenario: <code>sqlalchemy 2.0.36 → 2.1.0</code> changes async session handling; <code>asyncpg 0.30.0</code> alters connection pool defaults. The app boots, the health check passes, and a subtle ORM regression ships to production — with no diff to review.</p>
+    <p class="sd-body">With <code>uv</code>, the lock file captures the exact resolved graph including all transitive deps. Any change is an explicit, reviewable diff committed to source control — not a silent runtime surprise discovered by a user at kickoff.</p>
+  </div>
+  <div class="sd-panel" id="p4-2">
+    <p class="sd-lbl">uv sync — deterministic terminal audit</p>
+<pre class="sdc">$ uv sync
+<span class="fn">Resolved</span> 47 packages in <span class="st">212ms</span>
+  <span class="fn">✓</span> fastapi==0.115.0
+  <span class="fn">✓</span> sqlalchemy==2.0.36
+  <span class="fn">✓</span> asyncpg==0.29.0
+  <span class="fn">✓</span> pydantic==2.9.2
+  <span class="fn">✓</span> uvicorn==0.32.0
+  <span class="fn">✓</span> alembic==1.14.0
+  <span class="fn">✓</span> python-jose==3.3.0
+<span class="fn">All packages installed. Environment stable.</span> <span class="cm">(0 changes from uv.lock)</span>
+
+$ uv run python -m pytest tests/ -q
+<span class="fn">..........................................</span>  42 passed in 3.21s
+
+$ uv run alembic upgrade head
+<span class="fn">INFO</span>  Running upgrade <span class="st">a3f2c1d8e → b9c4d2f1a</span>
+<span class="fn">INFO</span>  add_match_taipei_tz_column — <span class="fn">done</span>
+
+$ docker build --no-cache . --tag football-api:1.4.2
+  Step 4/9: RUN uv sync --no-dev <span class="fn">--frozen</span>
+  <span class="cm">  # --frozen: build FAILS if pyproject.toml and uv.lock are out of sync</span>
+  <span class="cm">  # Silent drift becomes a loud CI failure — by design</span>
+  <span class="fn">✓ Build complete.</span></pre>
+    <p class="sd-body">The <code>--frozen</code> flag in the Docker build stage is the critical safeguard. If any developer updates <code>pyproject.toml</code> without regenerating <code>uv.lock</code>, the build fails hard — converting the silent drift scenario into an immediate, reviewable CI failure before it ever reaches a deploy.</p>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="sd-foot">
+  <button class="sd-btn" id="btnP" onclick="navSlide(-1)" disabled>← Prev</button>
+  <span class="sd-prog" id="sdProg">Slide 1 of 5</span>
+  <button class="sd-btn" id="btnN" onclick="navSlide(1)">Next →</button>
+</div>
+</div>
+</div>
+
+<script>
+let cur = 0;
+const TOTAL = 5;
+
+function goSlide(n) {
+  document.querySelectorAll('.sd-slide').forEach((s,i) => {
+    s.style.display = i === n ? 'block' : 'none';
+  });
+  document.querySelectorAll('.sd-pill').forEach((p,i) => {
+    p.classList.toggle('on', i === n);
+  });
+  cur = n;
+  document.getElementById('btnP').disabled = n === 0;
+  document.getElementById('btnN').disabled = n === TOTAL - 1;
+  document.getElementById('sdProg').textContent = `Slide ${n+1} of ${TOTAL}`;
+}
+
+function goTab(si, ti) {
+  const sl = document.getElementById('sl' + si);
+  sl.querySelectorAll('.sd-tab').forEach((t,i) => t.classList.toggle('on', i === ti));
+  sl.querySelectorAll('.sd-panel').forEach((p,i) => {
+    p.style.display = i === ti ? 'block' : 'none';
+    p.classList.toggle('on', i === ti);
+  });
+}
+
+function navSlide(d) { goSlide(Math.max(0, Math.min(TOTAL-1, cur + d)); }
+
+// Init after streaming — hide all but first slide
+document.querySelectorAll('.sd-slide').forEach((s,i) => {
+  s.style.display = i === 0 ? 'block' : 'none';
+});
+// Init panels
+for(let si=0; si<5; si++){
+  const sl = document.getElementById('sl'+si);
+  if(!sl) continue;
+  sl.querySelectorAll('.sd-panel').forEach((p,i) => {
+    if(i > 0) p.style.display = 'none';
+  });
+}
+</script>
