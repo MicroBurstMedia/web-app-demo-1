@@ -3,346 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MicroBurstMedia Interlink Conveyor Platform</title>
+  <title>MicroBurstMedia Interlink Engine</title>
   <style>
-    /* 1. RESET AND TOTEM ORIENTATION */
+    /* 1. GLOBAL DESIGN SYSTEM (CYBER MINIMALISM) */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    
+
     body {
       background-color: #060913;
       color: #f3f4f6;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
-      height: 1920px;
-      width: 1080px;
-      user-select: none;
-    }
-
-    .totem-canvas {
-      width: 1080px;
-      height: 1920px;
-      padding: 60px;
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #05070f 100%);
-      position: relative;
-    }
-
-    /* SYSTEM BRAND HEADER */
-    .brand-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .brand-header h1 {
-      font-size: 3.5rem;
-      letter-spacing: 4px;
-      color: #3b82f6;
-      text-transform: uppercase;
-      text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-    }
-
-    .brand-header p {
-      font-size: 1.4rem;
-      color: #64748b;
-      margin-top: 10px;
-    }
-
-    /* 2. THE CORE CONVEYOR BELT GRID SYSTEM */
-    .conveyor-system-container {
-      position: relative;
-      width: 100%;
-      height: 900px;
-      background: rgba(15, 23, 42, 0.3);
-      border: 2px dashed #1e293b;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto; /* Ensures full web desktop scrollability */
     }
 
-    /* The Main Structural Track Line */
-    .conveyor-belt-track {
-      position: absolute;
-      width: 90%;
-      height: 40px;
-      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-      border: 3px solid #334155;
-      border-radius: 20px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 40px;
-    }
-
-    /* Track Roller Wheels */
-    .track-roller {
-      width: 16px;
-      height: 16px;
-      background: #475569;
-      border-radius: 50%;
-      border: 2px solid #1e293b;
-      animation: spinRoller 2s linear infinite;
-      animation-play-state: paused;
-    }
-
-    @keyframes spinRoller {
-      100% { transform: rotate(360deg); }
-    }
-
-    /* 3. THE ACTIVE NETWORK BUSINESS NODES */
-    .interlink-node {
-      position: absolute;
-      width: 150px;
-      height: 150px;
+    /* Container matching your structured workflow card styling */
+    .interlink-runtime-card {
       background: #0f172a;
-      border: 3px solid #334155;
-      border-radius: 50%;
+      border: 2px solid #1e293b;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 580px; /* Perfect desktop centering; scales natively down to mobile */
+      padding: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      z-index: 10;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      cursor: pointer;
+      gap: 32px;
     }
 
-    .interlink-node:active {
-      transform: scale(0.92);
-    }
-
-    /* Node Positioning Across the Track Coordinates */
-    #node1 { left: 8%; top: calc(50% - 180px); }  /* Social Intake Above */
-    #node2 { left: 34%; top: calc(50% + 30px); }  /* Triage Matrix Below */
-    #node3 { left: 60%; top: calc(50% - 180px); }  /* Stripe Processor Above */
-    #node4 { left: 84%; top: calc(50% + 30px); }  /* Dropbox Fulfillment Below */
-
-    /* Node Active/Processing States */
-    .interlink-node.processing-state {
-      border-color: #3b82f6;
-      background: #1e293b;
-      box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
-    }
-
-    .interlink-node h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #94a3b8;
-      text-transform: uppercase;
+    .header-block {
       text-align: center;
     }
 
-    .interlink-node.processing-state h3 {
-      color: #60a5fa;
-    }
-
-    .node-icon {
-      font-size: 2.2rem;
-    }
-
-    /* 4. DIGITAL DATA PACKET STRIP */
-    .conveyor-data-packet {
-      position: absolute;
-      width: 32px;
-      height: 32px;
-      background: radial-gradient(circle at 30% 30%, #60a5fa 0%, #2563eb 100%);
-      border-radius: 50%;
-      box-shadow: 0 0 20px #3b82f6, 0 0 40px #3b82f6;
-      left: 10%;
-      top: calc(50% - 16px);
-      z-index: 5;
-      display: none;
-    }
-
-    /* 5. INTERACTIVE LOWER CONTROL BLOCK & QUICK GUIDE */
-    .control-deck-panel {
-      background: #0f172a;
-      border: 2px solid #1e293b;
-      border-radius: 20px;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
-    }
-
-    .trigger-master-btn {
-      width: 100%;
-      height: 80px;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      border: 1px solid #60a5fa;
-      border-radius: 14px;
-      font-size: 1.6rem;
-      font-weight: 700;
+    .header-block h2 {
+      font-size: 1.8rem;
+      letter-spacing: 2px;
       color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .header-block p {
+      font-size: 1rem;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    /* 2. THE SNAKE MOTION PIPELINE LINK GRAPH */
+    .pipeline-view-frame {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* SVG Track matching the precise fluid curves seen in your video */
+    .pipeline-svg-track {
+      width: 85%;
+      height: 80%;
+    }
+
+    .track-path-underlay {
+      fill: none;
+      stroke: #1e293b;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .track-path-pulse {
+      fill: none;
+      stroke: #2563eb;
+      stroke-width: 8;
+      stroke-linecap: round;
+      opacity: 0.3;
+    }
+
+    /* Interactive Node Coordinates */
+    .network-hub-dot {
+      fill: #0f172a;
+      stroke: #334155;
+      stroke-width: 4;
       cursor: pointer;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-      transition: all 0.2s;
+      transition: all 0.3s ease;
     }
 
-    .trigger-master-btn:active {
-      transform: scale(0.98);
+    .network-hub-dot.active-node {
+      fill: #2563eb;
+      stroke: #60a5fa;
+      stroke-width: 6;
+      filter: drop-shadow(0 0 12px #2563eb);
     }
 
-    .node-instruction-card {
+    /* Moving Processing Core Packet */
+    .conveyor-data-packet {
+      fill: #60a5fa;
+      filter: drop-shadow(0 0 10px #3b82f6) drop-shadow(0 0 20px #2563eb);
+    }
+
+    /* 3. DYNAMIC STEP DETAILS BLOCK */
+    .summary-details-deck {
       background: #060913;
-      border-radius: 12px;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
       padding: 24px;
-      border-left: 5px solid #334155;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.3s ease;
     }
 
-    .node-instruction-card h4 {
-      font-size: 1.5rem;
-      color: #e2e8f0;
-      margin-bottom: 8px;
+    .summary-details-deck.pulse-border {
+      border-color: #2563eb;
     }
 
-    .node-instruction-card p {
-      font-size: 1.2rem;
+    .step-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(37, 99, 235, 0.1);
+      color: #60a5fa;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .summary-details-deck h3 {
+      font-size: 1.3rem;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .summary-details-deck p {
+      font-size: 1rem;
       color: #94a3b8;
       line-height: 1.6;
+    }
+
+    /* 4. DRIVER CONTROL INTERFACE */
+    .action-control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .engine-trigger-btn {
+      width: 100%;
+      height: 60px;
+      background: #ffffff;
+      color: #060913;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .engine-trigger-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .engine-trigger-btn:disabled {
+      background: #1e293b;
+      color: #64748b;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
 
-  <div class="totem-canvas">
+  <div class="interlink-runtime-card">
     
-    <div class="brand-header">
-      <h1>MicroBurstMedia</h1>
-      <p>Interlink Conveyor Sequence Matrix &bull; Real-Time System Blueprint</p>
+    <div class="header-block">
+      <h2>Interlink System</h2>
+      <p>Automated Network Node Pipeline</p>
     </div>
 
-    <div class="conveyor-system-container">
-      
-      <div class="conveyor-belt-track" id="beltTrack">
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-        <div class="track-roller"></div>
-      </div>
+    <div class="pipeline-view-frame">
+      <svg class="pipeline-svg-track" viewBox="0 0 400 200">
+        <path id="pipelineTrack" class="track-path-underlay" d="M 30,50 C 150,50 100,100 200,100 C 300,100 250,150 370,150" />
+        <path class="track-path-pulse" d="M 30,50 C 150,50 100,100 200,100 C 300,100 250,150 370,150" />
 
-      <div class="conveyor-data-packet" id="dataPacket"></div>
+        <circle id="nodeMarker1" class="network-hub-dot" cx="30" cy="50" r="10" />
+        <circle id="nodeMarker2" class="network-hub-dot" cx="130" cy="72" r="10" />
+        <circle id="nodeMarker3" class="network-hub-dot" cx="260" cy="122" r="10" />
+        <circle id="nodeMarker4" class="network-hub-dot" cx="370" cy="150" r="10" />
 
-      <div class="interlink-node" id="node1">
-        <div class="node-icon">📱</div>
-        <h3>Content Matrix</h3>
-      </div>
-
-      <div class="interlink-node" id="node2">
-        <div class="node-icon">🛡️</div>
-        <h3>Triage Registry</h3>
-      </div>
-
-      <div class="interlink-node" id="node3">
-        <div class="node-icon">💳</div>
-        <h3>Stripe Node</h3>
-      </div>
-
-      <div class="interlink-node" id="node4">
-        <div class="node-icon">📦</div>
-        <h3>Dropbox Vault</h3>
-      </div>
-
+        <circle id="motionPacket" class="conveyor-data-packet" r="8" cx="30" cy="50" style="display: none;" />
+      </svg>
     </div>
 
-    <div class="control-deck-panel">
-      <button class="trigger-master-btn" onclick="startConveyorLoop()">⚡ Inject Live Packet Into Sequence</button>
-      
-      <div class="node-instruction-card" id="guideCard">
-        <h4 id="guideTitle">System Status: Standby</h4>
-        <p id="guideDesc">Tap the master execution button above to inject a theoretical user payload into the MicroBurstMedia Interlink network loop and watch the automated pipeline respond live.</p>
-      </div>
+    <div class="summary-details-deck" id="detailsDeck">
+      <div class="step-badge" id="stepBadge">Status</div>
+      <h3 id="stepTitle">Pipeline Ready</h3>
+      <p id="stepDesc">Initialize the conveyor sequence execution path below to track incoming payload distributions moving natively between live operational nodes.</p>
+    </div>
+
+    <div class="action-control-panel">
+      <button class="engine-trigger-btn" id="triggerBtn" onclick="runPipelineSequence()">Execute Link Cycle</button>
     </div>
 
   </div>
 
   <script>
-    const nodeCoords = [
-      { left: 8, title: "Stage 1: Content Matrix Node", desc: "Captures top-of-funnel short-form traffic interactions across X and TikTok, instantly routing specific URL identity signatures down the track." },
-      { left: 34, title: "Stage 2: Triage Registry Core", desc: "Isolates incoming domain data signatures in memory, screening the payload against security rule protocols before logging validation metrics." },
-      { left: 60, title: "Stage 3: Stripe Transaction Gateway", desc: "Processes financial operations instantly via asynchronous API webhooks, updating centralized ledger fields completely hands-free." },
-      { left: 84, title: "Stage 4: Dropbox Delivery Vault", desc: "Triggers downstream asset packaging, generating dynamic deliverable links and archiving customer file records instantly." }
+    const pipelineSteps = [
+      { badge: "Stage 01", title: "Content Matrix", desc: "Captures top-of-funnel inbound visual traffic streams, identifying incoming traffic parameters cleanly.", progressEnd: 0.0 },
+      { badge: "Stage 02", title: "Triage Registry", desc: "Sifts parameters instantly to isolate clean transactional indicators from cold user entries.", progressEnd: 0.33 },
+      { badge: "Stage 03", title: "Stripe Gateway", desc: "Fires direct transaction processing triggers via touchless background webhooks automatically.", progressEnd: 0.72 },
+      { badge: "Stage 04", title: "Dropbox Delivery", desc: "Completes fulfillment by dynamically packing assets and instantly generating access points.", progressEnd: 1.0 }
     ];
 
-    function startConveyorLoop() {
-      const packet = document.getElementById('dataPacket');
-      const rollers = document.querySelectorAll('.track-roller');
+    function runPipelineSequence() {
+      const track = document.getElementById('pipelineTrack');
+      const packet = document.getElementById('motionPacket');
+      const button = document.getElementById('triggerBtn');
+      const deck = document.getElementById('detailsDeck');
       
-      // Reset Nodes
-      resetNodes();
-      
-      // Activate Track Rollers Visual Movement
-      rollers.forEach(r => r.style.animationPlayState = "running");
-      
-      packet.style.left = "5%";
+      button.disabled = true;
       packet.style.display = "block";
       
-      let currentStage = 0;
-      
-      function moveNext() {
-        if (currentStage >= nodeCoords.length) {
-          // Sequence Complete
-          setTimeout(() => {
-            packet.style.display = "none";
-            rollers.forEach(r => r.style.animationPlayState = "paused");
-            updateGuide("Sequence Loop Complete", "The data transaction path has cleared all fulfillment lanes smoothly. The automation system has returned to standby.");
-            resetNodes();
-          }, 1000);
-          return;
+      const trackLength = track.getTotalLength();
+      let currentStageIndex = 0;
+      let animationStartTime = null;
+      const totalDuration = 6000; // 6 seconds clean step crawl traversal
+
+      // Reset node highlights immediately upon trigger
+      clearNodeHighlights();
+
+      function updateMotion(timestamp) {
+        if (!animationStartTime) animationStartTime = timestamp;
+        let elapsed = timestamp - animationStartTime;
+        let progress = Math.min(elapsed / totalDuration, 1);
+
+        // Calculate exact path plot position coordinates coordinates
+        let currentLength = progress * trackLength;
+        let currentPoint = track.getPointAtLength(currentLength);
+
+        packet.setAttribute('cx', currentPoint.x);
+        packet.setAttribute('cy', currentPoint.y);
+
+        // Check if packet passed or hit next stage milestone threshold
+        if (currentStageIndex < pipelineSteps.length) {
+          let targetMilestone = pipelineSteps[currentStageIndex].progressEnd;
+          if (progress >= targetMilestone) {
+            highlightNode(currentStageIndex + 1);
+            updateContentCard(pipelineSteps[currentStageIndex]);
+            
+            deck.classList.add('pulse-border');
+            setTimeout(() => deck.classList.remove('pulse-border'), 400);
+            
+            currentStageIndex++;
+          }
         }
 
-        let targetPercent = nodeCoords[currentStage].left;
-        let currentPercent = parseFloat(packet.style.left);
-        
-        let interval = setInterval(() => {
-          if (currentPercent >= targetPercent) {
-            clearInterval(interval);
-            
-            // Hit Node Endpoint -> Pulse Node and Update Text Details
-            activateNode(currentStage + 1);
-            updateGuide(nodeCoords[currentStage].title, nodeCoords[currentStage].desc);
-            
-            currentStage++;
-            setTimeout(moveNext, 1800); // Hold at node to let viewer digest details
-          } else {
-            currentPercent += 1;
-            packet.style.left = currentPercent + "%";
-          }
-        }, 20);
+        if (progress < 1) {
+          requestAnimationFrame(updateMotion);
+        } else {
+          // Cycle finished sequence cleanly
+          setTimeout(() => {
+            packet.style.display = "none";
+            button.disabled = false;
+            resetToStandby();
+          }, 1200);
+        }
       }
-      
-      moveNext();
+
+      requestAnimationFrame(updateMotion);
     }
 
-    function activateNode(nodeId) {
-      resetNodes();
-      document.getElementById(`node${nodeId}`).classList.add('processing-state');
+    function highlightNode(nodeId) {
+      clearNodeHighlights();
+      const node = document.getElementById(`nodeMarker${nodeId}`);
+      if (node) node.classList.add('active-node');
     }
 
-    function resetNodes() {
-      for(let i=1; i<=4; i++) {
-        document.getElementById(`node${i}`).classList.remove('processing-state');
+    function clearNodeHighlights() {
+      for (let i = 1; i <= 4; i++) {
+        const node = document.getElementById(`nodeMarker${i}`);
+        if (node) node.classList.remove('active-node');
       }
     }
 
-    function updateGuide(title, desc) {
-      document.getElementById('guideTitle').innerText = title;
-      document.getElementById('guideDesc').innerText = desc;
+    function updateContentCard(stepData) {
+      document.getElementById('stepBadge').innerText = stepData.badge;
+      document.getElementById('stepTitle').innerText = stepData.title;
+      document.getElementById('stepDesc').innerText = stepData.desc;
+    }
+
+    function resetToStandby() {
+      clearNodeHighlights();
+      document.getElementById('stepBadge').innerText = "Status";
+      document.getElementById('stepTitle').innerText = "Cycle Complete";
+      document.getElementById('stepDesc').innerText = "Pipeline data loop successfully finalized. System standing by for subsequent link cycles.";
     }
   </script>
 </body>
