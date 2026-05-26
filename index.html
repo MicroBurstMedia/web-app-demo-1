@@ -1,481 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velocity Banking Mini-Game</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --border-radius: 8px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MicroBurstMedia Interlink Conveyor Platform</title>
+  <style>
+    /* 1. RESET AND TOTEM ORIENTATION */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: #060913;
+      color: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      height: 1920px;
+      width: 1080px;
+      user-select: none;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    .totem-canvas {
+      width: 1080px;
+      height: 1920px;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #05070f 100%);
+      position: relative;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-        }
+    /* SYSTEM BRAND HEADER */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+    .brand-header h1 {
+      font-size: 3.5rem;
+      letter-spacing: 4px;
+      color: #3b82f6;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
 
-        .card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+    .brand-header p {
+      font-size: 1.4rem;
+      color: #64748b;
+      margin-top: 10px;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 20px;
-        }
+    /* 2. THE CORE CONVEYOR BELT GRID SYSTEM */
+    .conveyor-system-container {
+      position: relative;
+      width: 100%;
+      height: 900px;
+      background: rgba(15, 23, 42, 0.3);
+      border: 2px dashed #1e293b;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
+    /* The Main Structural Track Line */
+    .conveyor-belt-track {
+      position: absolute;
+      width: 90%;
+      height: 40px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border: 3px solid #334155;
+      border-radius: 20px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+    }
 
-        .description {
-            font-size: 0.95rem;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+    /* Track Roller Wheels */
+    .track-roller {
+      width: 16px;
+      height: 16px;
+      background: #475569;
+      border-radius: 50%;
+      border: 2px solid #1e293b;
+      animation: spinRoller 2s linear infinite;
+      animation-play-state: paused;
+    }
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
+    @keyframes spinRoller {
+      100% { transform: rotate(360deg); }
+    }
 
-        @media (max-width: 768px) {
-            .game-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    /* 3. THE ACTIVE NETWORK BUSINESS NODES */
+    .interlink-node {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: #0f172a;
+      border: 3px solid #334155;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      z-index: 10;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
 
-        section {
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: var(--border-radius);
-        }
+    .interlink-node:active {
+      transform: scale(0.92);
+    }
 
-        h3 {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            color: var(--secondary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
+    /* Node Positioning Across the Track Coordinates */
+    #node1 { left: 8%; top: calc(50% - 180px); }  /* Social Intake Above */
+    #node2 { left: 34%; top: calc(50% + 30px); }  /* Triage Matrix Below */
+    #node3 { left: 60%; top: calc(50% - 180px); }  /* Stripe Processor Above */
+    #node4 { left: 84%; top: calc(50% + 30px); }  /* Dropbox Fulfillment Below */
 
-        /* Stats Panel */
-        .stats-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            background-color: #fcfcfc;
-        }
+    /* Node Active/Processing States */
+    .interlink-node.processing-state {
+      border-color: #3b82f6;
+      background: #1e293b;
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+    }
 
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
+    .interlink-node h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      text-align: center;
+    }
 
-        .stat-item label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #888;
-            font-weight: bold;
-        }
+    .interlink-node.processing-state h3 {
+      color: #60a5fa;
+    }
 
-        .stat-item span {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
+    .node-icon {
+      font-size: 2.2rem;
+    }
 
-        /* Controls Panel */
-        .controls-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    /* 4. DIGITAL DATA PACKET STRIP */
+    .conveyor-data-packet {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: radial-gradient(circle at 30% 30%, #60a5fa 0%, #2563eb 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #3b82f6, 0 0 40px #3b82f6;
+      left: 10%;
+      top: calc(50% - 16px);
+      z-index: 5;
+      display: none;
+    }
 
-        .control-group {
-            margin-bottom: 20px;
-        }
+    /* 5. INTERACTIVE LOWER CONTROL BLOCK & QUICK GUIDE */
+    .control-deck-panel {
+      background: #0f172a;
+      border: 2px solid #1e293b;
+      border-radius: 20px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+    }
 
-        .checkbox-label {
-            display: block;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-weight: 500;
-        }
+    .trigger-master-btn {
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      border: 1px solid #60a5fa;
+      border-radius: 14px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s;
+    }
 
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .trigger-master-btn:active {
+      transform: scale(0.98);
+    }
 
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
+    .node-instruction-card {
+      background: #060913;
+      border-radius: 12px;
+      padding: 24px;
+      border-left: 5px solid #334155;
+    }
 
-        button:hover {
-            opacity: 0.9;
-        }
+    .node-instruction-card h4 {
+      font-size: 1.5rem;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+    }
 
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .btn-primary { background-color: var(--accent-color); color: white; }
-        .btn-secondary { background-color: var(--secondary-color); color: white; }
-        .btn-danger { background-color: #eee; color: var(--danger-color); margin-top: 10px; }
-
-        /* Feedback Panel */
-        .feedback-panel {
-            grid-column: 1 / -1;
-            background-color: #fff;
-        }
-
-        #feedback-text {
-            font-weight: 500;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-
-        .status-good { background-color: #e8f5e9; color: var(--success-color); }
-        .status-warning { background-color: #fff3e0; color: var(--warning-color); }
-        .status-danger { background-color: #ffebee; color: var(--danger-color); }
-
-        .details {
-            font-family: monospace;
-            font-size: 0.85rem;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
-            white-space: pre-wrap;
-        }
-
-        /* History Panel */
-        .history-panel {
-            grid-column: 1 / -1;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            color: #888;
-            font-weight: 600;
-        }
-
-        .positive { color: var(--success-color); font-weight: bold; }
-        .negative { color: var(--danger-color); }
-    </style>
+    .node-instruction-card p {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <header>
-                <h1>Velocity Banking Mini-Game</h1>
-                <p class="description">
-                    Velocity banking is a strategy that uses a line of credit (LOC) to pay down a mortgage faster by "parking" your paycheck in the LOC to minimize interest. 
-                    This is a simplified educational demo and does not constitute financial advice.
-                </p>
-            </header>
 
-            <div class="game-grid">
-                <!-- Stats Panel -->
-                <section class="stats-panel">
-                    <div class="stat-item">
-                        <label>Month</label>
-                        <span id="month-display">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <label>Mortgage Balance</label>
-                        <span id="mortgage-display">$100,000.00</span>
-                    </div>
-                    <div class="stat-item">
-                        <label>LOC Balance</label>
-                        <span id="loc-balance-display">$0.00</span>
-                    </div>
-                    <div class="stat-item">
-                        <label>LOC Available</label>
-                        <span id="loc-available-display">$20,000.00</span>
-                    </div>
-                </section>
-
-                <!-- Controls Panel -->
-                <section class="controls-panel">
-                    <div class="control-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="paycheck-parking-toggle"> Use Paycheck Parking
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="auto-velocity-toggle"> Auto Velocity Payment ($2,000)
-                        </label>
-                    </div>
-                    <div class="button-group">
-                        <button id="next-month-btn" class="btn-primary">Next Month</button>
-                        <button id="extra-payment-btn" class="btn-secondary">Make Extra Payment ($1,000)</button>
-                        <button id="reset-btn" class="btn-danger">Reset Game</button>
-                    </div>
-                </section>
-
-                <!-- Feedback Panel -->
-                <section class="feedback-panel">
-                    <h3>Monthly Feedback</h3>
-                    <div id="feedback-text">Welcome! Click "Next Month" to start your financial journey.</div>
-                    <div id="calculation-details" class="details"></div>
-                </section>
-
-                <!-- History Panel -->
-                <section class="history-panel">
-                    <h3>Recent History (Last 5 Months)</h3>
-                    <table id="history-table">
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Mortgage</th>
-                                <th>LOC</th>
-                                <th>Velocity Pmt</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-body">
-                            <!-- History rows will be added here -->
-                        </tbody>
-                    </table>
-                </section>
-            </div>
-        </div>
+  <div class="totem-canvas">
+    
+    <div class="brand-header">
+      <h1>MicroBurstMedia</h1>
+      <p>Interlink Conveyor Sequence Matrix &bull; Real-Time System Blueprint</p>
     </div>
 
-    <script>
-        // Game Constants
-        const INITIAL_MORTGAGE = 100000;
-        const MORTGAGE_RATE = 0.05;
-        const LOC_LIMIT = 20000;
-        const LOC_RATE = 0.08;
-        const MONTHLY_INCOME = 4000;
-        const MONTHLY_EXPENSES = 3000;
-        const AUTO_VELOCITY_AMOUNT = 2000;
-        const EXTRA_PAYMENT_AMOUNT = 1000;
+    <div class="conveyor-system-container">
+      
+      <div class="conveyor-belt-track" id="beltTrack">
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+        <div class="track-roller"></div>
+      </div>
 
-        // Game State
-        let state = {
-            month: 0,
-            mortgage: INITIAL_MORTGAGE,
-            locBalance: 0,
-            history: []
-        };
+      <div class="conveyor-data-packet" id="dataPacket"></div>
 
-        // DOM Elements
-        const monthDisplay = document.getElementById('month-display');
-        const mortgageDisplay = document.getElementById('mortgage-display');
-        const locBalanceDisplay = document.getElementById('loc-balance-display');
-        const locAvailableDisplay = document.getElementById('loc-available-display');
-        const feedbackText = document.getElementById('feedback-text');
-        const calculationDetails = document.getElementById('calculation-details');
-        const historyBody = document.getElementById('history-body');
+      <div class="interlink-node" id="node1">
+        <div class="node-icon">📱</div>
+        <h3>Content Matrix</h3>
+      </div>
+
+      <div class="interlink-node" id="node2">
+        <div class="node-icon">🛡️</div>
+        <h3>Triage Registry</h3>
+      </div>
+
+      <div class="interlink-node" id="node3">
+        <div class="node-icon">💳</div>
+        <h3>Stripe Node</h3>
+      </div>
+
+      <div class="interlink-node" id="node4">
+        <div class="node-icon">📦</div>
+        <h3>Dropbox Vault</h3>
+      </div>
+
+    </div>
+
+    <div class="control-deck-panel">
+      <button class="trigger-master-btn" onclick="startConveyorLoop()">⚡ Inject Live Packet Into Sequence</button>
+      
+      <div class="node-instruction-card" id="guideCard">
+        <h4 id="guideTitle">System Status: Standby</h4>
+        <p id="guideDesc">Tap the master execution button above to inject a theoretical user payload into the MicroBurstMedia Interlink network loop and watch the automated pipeline respond live.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const nodeCoords = [
+      { left: 8, title: "Stage 1: Content Matrix Node", desc: "Captures top-of-funnel short-form traffic interactions across X and TikTok, instantly routing specific URL identity signatures down the track." },
+      { left: 34, title: "Stage 2: Triage Registry Core", desc: "Isolates incoming domain data signatures in memory, screening the payload against security rule protocols before logging validation metrics." },
+      { left: 60, title: "Stage 3: Stripe Transaction Gateway", desc: "Processes financial operations instantly via asynchronous API webhooks, updating centralized ledger fields completely hands-free." },
+      { left: 84, title: "Stage 4: Dropbox Delivery Vault", desc: "Triggers downstream asset packaging, generating dynamic deliverable links and archiving customer file records instantly." }
+    ];
+
+    function startConveyorLoop() {
+      const packet = document.getElementById('dataPacket');
+      const rollers = document.querySelectorAll('.track-roller');
+      
+      // Reset Nodes
+      resetNodes();
+      
+      // Activate Track Rollers Visual Movement
+      rollers.forEach(r => r.style.animationPlayState = "running");
+      
+      packet.style.left = "5%";
+      packet.style.display = "block";
+      
+      let currentStage = 0;
+      
+      function moveNext() {
+        if (currentStage >= nodeCoords.length) {
+          // Sequence Complete
+          setTimeout(() => {
+            packet.style.display = "none";
+            rollers.forEach(r => r.style.animationPlayState = "paused");
+            updateGuide("Sequence Loop Complete", "The data transaction path has cleared all fulfillment lanes smoothly. The automation system has returned to standby.");
+            resetNodes();
+          }, 1000);
+          return;
+        }
+
+        let targetPercent = nodeCoords[currentStage].left;
+        let currentPercent = parseFloat(packet.style.left);
         
-        const paycheckParkingToggle = document.getElementById('paycheck-parking-toggle');
-        const autoVelocityToggle = document.getElementById('auto-velocity-toggle');
-        
-        const nextMonthBtn = document.getElementById('next-month-btn');
-        const extraPaymentBtn = document.getElementById('extra-payment-btn');
-        const resetBtn = document.getElementById('reset-btn');
+        let interval = setInterval(() => {
+          if (currentPercent >= targetPercent) {
+            clearInterval(interval);
+            
+            // Hit Node Endpoint -> Pulse Node and Update Text Details
+            activateNode(currentStage + 1);
+            updateGuide(nodeCoords[currentStage].title, nodeCoords[currentStage].desc);
+            
+            currentStage++;
+            setTimeout(moveNext, 1800); // Hold at node to let viewer digest details
+          } else {
+            currentPercent += 1;
+            packet.style.left = currentPercent + "%";
+          }
+        }, 20);
+      }
+      
+      moveNext();
+    }
 
-        // Helper: Format Currency
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-        }
+    function activateNode(nodeId) {
+      resetNodes();
+      document.getElementById(`node${nodeId}`).classList.add('processing-state');
+    }
 
-        // Update UI
-        function updateUI(logMessage = "", details = "") {
-            monthDisplay.textContent = state.month;
-            mortgageDisplay.textContent = formatCurrency(state.mortgage);
-            locBalanceDisplay.textContent = formatCurrency(state.locBalance);
-            locAvailableDisplay.textContent = formatCurrency(LOC_LIMIT - state.locBalance);
+    function resetNodes() {
+      for(let i=1; i<=4; i++) {
+        document.getElementById(`node${i}`).classList.remove('processing-state');
+      }
+    }
 
-            // Color coding for LOC balance
-            const locUtilization = state.locBalance / LOC_LIMIT;
-            locBalanceDisplay.style.color = locUtilization > 0.8 ? 'var(--danger-color)' : (locUtilization > 0.5 ? 'var(--warning-color)' : 'var(--primary-color)');
-
-            if (logMessage) {
-                feedbackText.textContent = logMessage;
-                feedbackText.className = ""; // Reset
-                if (logMessage.includes("Great")) feedbackText.classList.add("status-good");
-                else if (logMessage.includes("Careful") || logMessage.includes("limit")) feedbackText.classList.add("status-warning");
-            }
-
-            calculationDetails.textContent = details;
-
-            // Update History Table
-            historyBody.innerHTML = "";
-            state.history.slice(-5).reverse().forEach(entry => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${entry.month}</td>
-                    <td>${formatCurrency(entry.mortgage)}</td>
-                    <td class="${entry.locBalance > 15000 ? 'negative' : ''}">${formatCurrency(entry.locBalance)}</td>
-                    <td class="${entry.velocityPayment > 0 ? 'positive' : ''}">${entry.velocityPayment > 0 ? formatCurrency(entry.velocityPayment) : '-'}</td>
-                `;
-                historyBody.appendChild(row);
-            });
-
-            // Disable buttons if mortgage is paid off
-            if (state.mortgage <= 0) {
-                nextMonthBtn.disabled = true;
-                extraPaymentBtn.disabled = true;
-                feedbackText.textContent = "Congratulations! Your mortgage is paid off!";
-                feedbackText.className = "status-good";
-            }
-        }
-
-        // Game Logic: Next Month
-        function nextMonth() {
-            state.month++;
-            let details = `Month ${state.month} Calculations:\n`;
-            let velocityPaymentOccurred = 0;
-            let logMessage = "Month processed.";
-
-            const startMortgage = state.mortgage;
-            const startLoc = state.locBalance;
-
-            // 1. Paycheck Parking Logic
-            let effectiveLocForInterest = state.locBalance;
-            if (paycheckParkingToggle.checked) {
-                // Income goes in first, lowering the balance for interest calculation
-                effectiveLocForInterest = Math.max(0, state.locBalance - MONTHLY_INCOME);
-                state.locBalance -= MONTHLY_INCOME;
-                details += `- Income ($${MONTHLY_INCOME}) parked in LOC. New LOC: ${formatCurrency(state.locBalance)}\n`;
-            } else {
-                // Income just adds to cash (in this simple model, we assume it's used for expenses/LOC later)
-                state.locBalance -= (MONTHLY_INCOME - MONTHLY_EXPENSES);
-                details += `- Net Cash Flow ($${MONTHLY_INCOME - MONTHLY_EXPENSES}) applied to LOC.\n`;
-            }
-
-            // 2. Expenses (if parking was used)
-            if (paycheckParkingToggle.checked) {
-                state.locBalance += MONTHLY_EXPENSES;
-                details += `- Expenses ($${MONTHLY_EXPENSES}) paid from LOC. New LOC: ${formatCurrency(state.locBalance)}\n`;
-            }
-
-            // 3. Interest Calculations
-            const mortgageInterest = state.mortgage * (MORTGAGE_RATE / 12);
-            state.mortgage += mortgageInterest;
-            details += `- Mortgage Interest (5%): +${formatCurrency(mortgageInterest)}\n`;
-
-            const locInterest = Math.max(0, effectiveLocForInterest) * (LOC_RATE / 12);
-            state.locBalance += locInterest;
-            details += `- LOC Interest (8%): +${formatCurrency(locInterest)}\n`;
-
-            // 4. Auto Velocity Payment
-            if (autoVelocityToggle.checked && (LOC_LIMIT - state.locBalance) >= AUTO_VELOCITY_AMOUNT && state.mortgage > 0) {
-                const payment = Math.min(state.mortgage, AUTO_VELOCITY_AMOUNT);
-                state.mortgage -= payment;
-                state.locBalance += payment;
-                velocityPaymentOccurred = payment;
-                details += `- Auto Velocity Payment: $${payment} moved from LOC to Mortgage.\n`;
-                logMessage = "Great! Your mortgage went down faster this month because of a velocity payment.";
-            }
-
-            // Safety check for LOC limit
-            if (state.locBalance > LOC_LIMIT) {
-                logMessage = "Careful: Your LOC is over the limit! Interest is eating into your cash flow.";
-            }
-
-            // Record History
-            state.history.push({
-                month: state.month,
-                mortgage: state.mortgage,
-                locBalance: state.locBalance,
-                velocityPayment: velocityPaymentOccurred
-            });
-
-            updateUI(logMessage, details);
-        }
-
-        // Game Logic: Extra Payment
-        function makeExtraPayment() {
-            if ((LOC_LIMIT - state.locBalance) >= EXTRA_PAYMENT_AMOUNT && state.mortgage > 0) {
-                const payment = Math.min(state.mortgage, EXTRA_PAYMENT_AMOUNT);
-                state.mortgage -= payment;
-                state.locBalance += payment;
-                
-                // Update the last history entry if it exists for the current month
-                if (state.history.length > 0 && state.history[state.history.length - 1].month === state.month) {
-                    state.history[state.history.length - 1].mortgage = state.mortgage;
-                    state.history[state.history.length - 1].locBalance = state.locBalance;
-                    state.history[state.history.length - 1].velocityPayment += payment;
-                }
-
-                updateUI("Manual extra payment of $1,000 applied!", `Manual Action:\n- Moved $${payment} from LOC to Mortgage.`);
-            } else {
-                alert("Not enough room in LOC to make this payment!");
-            }
-        }
-
-        // Game Logic: Reset
-        function resetGame() {
-            state = {
-                month: 0,
-                mortgage: INITIAL_MORTGAGE,
-                locBalance: 0,
-                history: []
-            };
-            nextMonthBtn.disabled = false;
-            extraPaymentBtn.disabled = false;
-            updateUI("Game reset to initial state.", "Ready to start.");
-        }
-
-        // Event Listeners
-        nextMonthBtn.addEventListener('click', nextMonth);
-        extraPaymentBtn.addEventListener('click', makeExtraPayment);
-        resetBtn.addEventListener('click', resetGame);
-
-        // Initialize UI
-        updateUI();
-    </script>
+    function updateGuide(title, desc) {
+      document.getElementById('guideTitle').innerText = title;
+      document.getElementById('guideDesc').innerText = desc;
+    }
+  </script>
 </body>
 </html>
