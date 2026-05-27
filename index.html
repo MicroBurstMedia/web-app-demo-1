@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MicroBurstMedia Interlink Engine</title>
+  <title>MicroBurstMedia | Interlink Simulator</title>
   <style>
-    /* 1. GLOBAL DESIGN SYSTEM (CYBER MINIMALISM) */
+    /* 1. GLOBAL CYBER MINIMALISM DESIGN */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -21,296 +21,522 @@
       justify-content: center;
       align-items: flex-start;
       padding: 40px 20px;
-      overflow-y: auto; /* Ensures full web desktop scrollability */
     }
 
-    /* Container matching your structured workflow card styling */
-    .interlink-runtime-card {
+    .app-container {
       background: #0f172a;
       border: 2px solid #1e293b;
-      border-radius: 28px;
+      border-radius: 24px;
       width: 100%;
-      max-width: 580px; /* Perfect desktop centering; scales natively down to mobile */
-      padding: 32px;
+      max-width: 600px; /* Scales perfectly for desktop and mobile portrait */
+      padding: 30px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 25px;
     }
 
+    /* 2. HEADER */
     .header-block {
       text-align: center;
     }
 
-    .header-block h2 {
-      font-size: 1.8rem;
+    .header-block h1 {
+      font-size: 2.2rem;
       letter-spacing: 2px;
-      color: #ffffff;
+      color: #3b82f6;
       text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
     }
 
     .header-block p {
-      font-size: 1rem;
-      color: #64748b;
-      margin-top: 6px;
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-top: 5px;
     }
 
-    /* 2. THE SNAKE MOTION PIPELINE LINK GRAPH */
-    .pipeline-view-frame {
+    /* 3. VISUAL BACKEND SYSTEM GRID */
+    .grid-display-frame {
       position: relative;
       width: 100%;
-      height: 240px;
+      height: 320px;
       background: #090d16;
       border: 1px solid #1e293b;
-      border-radius: 20px;
+      border-radius: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
     }
 
-    /* SVG Track matching the precise fluid curves seen in your video */
-    .pipeline-svg-track {
-      width: 85%;
-      height: 80%;
+    .pipeline-svg {
+      width: 100%;
+      height: 100%;
     }
 
-    .track-path-underlay {
+    /* The rigid circuit board track */
+    .grid-track-bg {
       fill: none;
       stroke: #1e293b;
-      stroke-width: 8;
-      stroke-linecap: round;
+      stroke-width: 6;
+      stroke-linejoin: round;
     }
 
-    .track-path-pulse {
+    .grid-track-active {
       fill: none;
-      stroke: #2563eb;
-      stroke-width: 8;
-      stroke-linecap: round;
-      opacity: 0.3;
+      stroke: #10b981; /* Green to represent currency/data */
+      stroke-width: 6;
+      stroke-linejoin: round;
+      opacity: 0.2;
     }
 
-    /* Interactive Node Coordinates */
-    .network-hub-dot {
+    /* Nodes */
+    .node-hub {
       fill: #0f172a;
       stroke: #334155;
       stroke-width: 4;
-      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .network-hub-dot.active-node {
-      fill: #2563eb;
-      stroke: #60a5fa;
-      stroke-width: 6;
-      filter: drop-shadow(0 0 12px #2563eb);
+    .node-hub.active {
+      fill: #10b981;
+      stroke: #34d399;
+      filter: drop-shadow(0 0 10px #10b981);
     }
 
-    /* Moving Processing Core Packet */
-    .conveyor-data-packet {
-      fill: #60a5fa;
-      filter: drop-shadow(0 0 10px #3b82f6) drop-shadow(0 0 20px #2563eb);
+    .node-label {
+      fill: #94a3b8;
+      font-size: 12px;
+      font-weight: bold;
+      text-anchor: middle;
+      pointer-events: none;
     }
 
-    /* 3. DYNAMIC STEP DETAILS BLOCK */
-    .summary-details-deck {
+    /* The moving currency particle */
+    .currency-packet {
+      fill: #34d399;
+      filter: drop-shadow(0 0 8px #10b981) drop-shadow(0 0 16px #34d399);
+      display: none; /* Hidden until triggered */
+    }
+
+    /* 4. USER BOARD & ESTIMATOR HUB */
+    .user-board {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
       background: #060913;
       border: 1px solid #1e293b;
       border-radius: 16px;
-      padding: 24px;
-      min-height: 160px;
+      padding: 20px;
+    }
+
+    .controls-row {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.3s ease;
+      gap: 15px;
     }
 
-    .summary-details-deck.pulse-border {
-      border-color: #2563eb;
-    }
-
-    .step-badge {
-      display: inline-block;
-      align-self: flex-start;
-      background: rgba(37, 99, 235, 0.1);
-      color: #60a5fa;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .summary-details-deck h3 {
-      font-size: 1.3rem;
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .summary-details-deck p {
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
       font-size: 1rem;
-      color: #94a3b8;
-      line-height: 1.6;
-    }
-
-    /* 4. DRIVER CONTROL INTERFACE */
-    .action-control-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .engine-trigger-btn {
-      width: 100%;
-      height: 60px;
-      background: #ffffff;
-      color: #060913;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      border: none;
     }
 
-    .engine-trigger-btn:hover {
-      background: #e2e8f0;
+    .btn-run {
+      background: #3b82f6;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
     }
 
-    .engine-trigger-btn:disabled {
+    .btn-run:active { transform: scale(0.96); }
+    .btn-run:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
+
+    .btn-auto {
       background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+    }
+
+    .btn-auto.active {
+      background: #10b981;
+      color: #060913;
+      border-color: #34d399;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Estimator Stats */
+    .estimator-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .stat-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-box label {
+      display: block;
+      font-size: 0.75rem;
       color: #64748b;
-      cursor: not-allowed;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat-box input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      outline: none;
+      border-bottom: 1px dashed #334155;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #f3f4f6;
+    }
+
+    .stat-income {
+      color: #34d399; /* Green for money */
+    }
+
+    /* 5. LEARNING MATRIX (TEXT SLIDER) */
+    .learning-slider {
+      display: flex;
+      align-items: stretch;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 140px;
+    }
+
+    .slider-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border: none;
+      width: 40px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-btn:hover { background: #334155; color: #fff; }
+
+    .slider-content {
+      flex: 1;
+      display: flex;
+      padding: 15px;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .slider-image-frame {
+      width: 80px;
+      height: 80px;
+      background: #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid #334155;
+    }
+
+    .slider-image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-text {
+      flex: 1;
+    }
+
+    .slider-text h3 {
+      font-size: 1.1rem;
+      color: #60a5fa;
+      margin-bottom: 6px;
+    }
+
+    .slider-text p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-  <div class="interlink-runtime-card">
+  <div class="app-container">
     
     <div class="header-block">
-      <h2>Interlink System</h2>
-      <p>Automated Network Node Pipeline</p>
+      <h1>MicroBurstMedia</h1>
+      <p>Interactive Interlink Sequence Simulator</p>
     </div>
 
-    <div class="pipeline-view-frame">
-      <svg class="pipeline-svg-track" viewBox="0 0 400 200">
-        <path id="pipelineTrack" class="track-path-underlay" d="M 30,50 C 150,50 100,100 200,100 C 300,100 250,150 370,150" />
-        <path class="track-path-pulse" d="M 30,50 C 150,50 100,100 200,100 C 300,100 250,150 370,150" />
+    <div class="grid-display-frame">
+      <svg class="pipeline-svg" viewBox="0 0 400 300">
+        <path id="mainTrack" class="grid-track-bg" d="M 50,40 L 350,40 L 350,150 L 50,150 L 50,260 L 200,260" />
+        <path class="grid-track-active" d="M 50,40 L 350,40 L 350,150 L 50,150 L 50,260 L 200,260" />
 
-        <circle id="nodeMarker1" class="network-hub-dot" cx="30" cy="50" r="10" />
-        <circle id="nodeMarker2" class="network-hub-dot" cx="130" cy="72" r="10" />
-        <circle id="nodeMarker3" class="network-hub-dot" cx="260" cy="122" r="10" />
-        <circle id="nodeMarker4" class="network-hub-dot" cx="370" cy="150" r="10" />
+        <circle id="node1" class="node-hub" cx="50" cy="40" r="12" />
+        <text x="50" y="20" class="node-label">Traffic Source</text>
 
-        <circle id="motionPacket" class="conveyor-data-packet" r="8" cx="30" cy="50" style="display: none;" />
+        <circle id="node2" class="node-hub" cx="350" cy="40" r="12" />
+        <text x="350" y="20" class="node-label">Sales Funnel</text>
+
+        <circle id="node3" class="node-hub" cx="350" cy="150" r="12" />
+        <text x="350" y="130" class="node-label">Payment Gateway</text>
+
+        <circle id="node4" class="node-hub" cx="50" cy="150" r="12" />
+        <text x="50" y="130" class="node-label">Storage Vault</text>
+
+        <circle id="node5" class="node-hub" cx="200" cy="260" r="16" />
+        <text x="200" y="290" class="node-label" style="fill: #10b981;">Business Funded</text>
+
+        <circle id="dataPacket" class="currency-packet" r="6" cx="50" cy="40" />
       </svg>
     </div>
 
-    <div class="summary-details-deck" id="detailsDeck">
-      <div class="step-badge" id="stepBadge">Status</div>
-      <h3 id="stepTitle">Pipeline Ready</h3>
-      <p id="stepDesc">Initialize the conveyor sequence execution path below to track incoming payload distributions moving natively between live operational nodes.</p>
+    <div class="user-board">
+      <div class="controls-row">
+        <button id="runOnceBtn" class="btn btn-run" onclick="triggerRunOnce()">Run AI Once</button>
+        <button id="autoToggleBtn" class="btn btn-auto" onclick="toggleAutoMode()">Auto System: OFF</button>
+      </div>
+
+      <div class="estimator-grid">
+        <div class="stat-box">
+          <label>Product Price</label>
+          <div style="display:flex; align-items:center; justify-content:center;">
+            <span style="color:#fff; font-size:1.2rem; font-weight:bold;">$</span>
+            <input type="number" id="priceInput" value="500" oninput="calculateIncome()">
+          </div>
+        </div>
+        <div class="stat-box">
+          <label>Sales Number</label>
+          <div class="stat-value" id="salesDisplay">0</div>
+        </div>
+        <div class="stat-box">
+          <label>Estimated Income</label>
+          <div class="stat-value stat-income" id="incomeDisplay">$0</div>
+        </div>
+      </div>
     </div>
 
-    <div class="action-control-panel">
-      <button class="engine-trigger-btn" id="triggerBtn" onclick="runPipelineSequence()">Execute Link Cycle</button>
+    <div class="learning-slider">
+      <button class="slider-btn" onclick="slide(-1)">&#10094;</button>
+      
+      <div class="slider-content">
+        <div class="slider-image-frame">
+          <img id="sliderImg" src="" alt="Learning Context Grid Visual">
+        </div>
+        <div class="slider-text">
+          <h3 id="sliderTitle">Stage 1: Content Matrix Engine</h3>
+          <p id="sliderDesc">Captures top-of-funnel inbound visual traffic streams, identifying incoming traffic parameters cleanly.</p>
+        </div>
+      </div>
+
+      <button class="slider-btn" onclick="slide(1)">&#10095;</button>
     </div>
 
   </div>
 
   <script>
-    const pipelineSteps = [
-      { badge: "Stage 01", title: "Content Matrix", desc: "Captures top-of-funnel inbound visual traffic streams, identifying incoming traffic parameters cleanly.", progressEnd: 0.0 },
-      { badge: "Stage 02", title: "Triage Registry", desc: "Sifts parameters instantly to isolate clean transactional indicators from cold user entries.", progressEnd: 0.33 },
-      { badge: "Stage 03", title: "Stripe Gateway", desc: "Fires direct transaction processing triggers via touchless background webhooks automatically.", progressEnd: 0.72 },
-      { badge: "Stage 04", title: "Dropbox Delivery", desc: "Completes fulfillment by dynamically packing assets and instantly generating access points.", progressEnd: 1.0 }
+    /* --- 1. ESTIMATOR HUB LOGIC --- */
+    let salesCount = 0;
+    
+    function calculateIncome() {
+      const price = parseFloat(document.getElementById('priceInput').value) || 0;
+      const income = price * salesCount;
+      
+      // Format with commas
+      document.getElementById('salesDisplay').innerText = salesCount.toLocaleString();
+      document.getElementById('incomeDisplay').innerText = "$" + income.toLocaleString();
+    }
+
+    function incrementSales() {
+      salesCount++;
+      calculateIncome();
+    }
+
+
+    /* --- 2. GRID ANIMATION ENGINE --- */
+    const track = document.getElementById('mainTrack');
+    const packet = document.getElementById('dataPacket');
+    const runOnceBtn = document.getElementById('runOnceBtn');
+    const autoBtn = document.getElementById('autoToggleBtn');
+    
+    let isAnimating = false;
+    let isAutoMode = false;
+    
+    // Milestones roughly calculated based on the SVG path length
+    const nodeMilestones = [
+      { id: 1, trigger: 0.0 },   // Traffic
+      { id: 2, trigger: 0.35 },  // Triage
+      { id: 3, trigger: 0.48 },  // Stripe
+      { id: 4, trigger: 0.83 },  // Dropbox
+      { id: 5, trigger: 1.0 }    // Funded
     ];
 
-    function runPipelineSequence() {
-      const track = document.getElementById('pipelineTrack');
-      const packet = document.getElementById('motionPacket');
-      const button = document.getElementById('triggerBtn');
-      const deck = document.getElementById('detailsDeck');
-      
-      button.disabled = true;
+    function clearNodes() {
+      for(let i=1; i<=5; i++) {
+        document.getElementById(`node${i}`).classList.remove('active');
+      }
+    }
+
+    function toggleAutoMode() {
+      isAutoMode = !isAutoMode;
+      if(isAutoMode) {
+        autoBtn.classList.add('active');
+        autoBtn.innerText = "Auto System: ON";
+        if(!isAnimating) animatePipeline();
+      } else {
+        autoBtn.classList.remove('active');
+        autoBtn.innerText = "Auto System: OFF";
+      }
+    }
+
+    function triggerRunOnce() {
+      if(isAnimating) return;
+      isAutoMode = false; // Disable auto if they manually click run once
+      autoBtn.classList.remove('active');
+      autoBtn.innerText = "Auto System: OFF";
+      animatePipeline();
+    }
+
+    function animatePipeline() {
+      isAnimating = true;
+      runOnceBtn.disabled = true;
       packet.style.display = "block";
-      
+      clearNodes();
+
       const trackLength = track.getTotalLength();
-      let currentStageIndex = 0;
-      let animationStartTime = null;
-      const totalDuration = 6000; // 6 seconds clean step crawl traversal
+      let startTime = null;
+      const duration = 2500; // 2.5 seconds to cross the whole grid
+      let currentNodeIndex = 0;
 
-      // Reset node highlights immediately upon trigger
-      clearNodeHighlights();
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        let progress = Math.min((timestamp - startTime) / duration, 1);
 
-      function updateMotion(timestamp) {
-        if (!animationStartTime) animationStartTime = timestamp;
-        let elapsed = timestamp - animationStartTime;
-        let progress = Math.min(elapsed / totalDuration, 1);
-
-        // Calculate exact path plot position coordinates coordinates
+        // Get exact X/Y on the path
         let currentLength = progress * trackLength;
-        let currentPoint = track.getPointAtLength(currentLength);
+        let point = track.getPointAtLength(currentLength);
 
-        packet.setAttribute('cx', currentPoint.x);
-        packet.setAttribute('cy', currentPoint.y);
+        packet.setAttribute('cx', point.x);
+        packet.setAttribute('cy', point.y);
 
-        // Check if packet passed or hit next stage milestone threshold
-        if (currentStageIndex < pipelineSteps.length) {
-          let targetMilestone = pipelineSteps[currentStageIndex].progressEnd;
-          if (progress >= targetMilestone) {
-            highlightNode(currentStageIndex + 1);
-            updateContentCard(pipelineSteps[currentStageIndex]);
+        // Check node collisions
+        if (currentNodeIndex < nodeMilestones.length) {
+          if (progress >= nodeMilestones[currentNodeIndex].trigger) {
+            let nId = nodeMilestones[currentNodeIndex].id;
+            document.getElementById(`node${nId}`).classList.add('active');
             
-            deck.classList.add('pulse-border');
-            setTimeout(() => deck.classList.remove('pulse-border'), 400);
-            
-            currentStageIndex++;
+            // NOTE: Automatic adjustment of 'currentSlide' has been completely decoupled here
+            // so the text slider remains purely under manual customer control while system loops.
+
+            currentNodeIndex++;
           }
         }
 
         if (progress < 1) {
-          requestAnimationFrame(updateMotion);
+          requestAnimationFrame(step);
         } else {
-          // Cycle finished sequence cleanly
+          // Animation Complete
+          incrementSales(); // Add money!
+          packet.style.display = "none";
+          
           setTimeout(() => {
-            packet.style.display = "none";
-            button.disabled = false;
-            resetToStandby();
-          }, 1200);
+            clearNodes();
+            isAnimating = false;
+            runOnceBtn.disabled = false;
+            
+            // Loop if Auto is ON
+            if(isAutoMode) {
+              animatePipeline();
+            }
+          }, 400); // Short pause before resetting
         }
       }
 
-      requestAnimationFrame(updateMotion);
+      requestAnimationFrame(step);
     }
 
-    function highlightNode(nodeId) {
-      clearNodeHighlights();
-      const node = document.getElementById(`nodeMarker${nodeId}`);
-      if (node) node.classList.add('active-node');
-    }
 
-    function clearNodeHighlights() {
-      for (let i = 1; i <= 4; i++) {
-        const node = document.getElementById(`nodeMarker${i}`);
-        if (node) node.classList.remove('active-node');
+    /* --- 3. LEARNING MATRIX SLIDER LOGIC --- */
+    const curriculum = [
+      {
+        title: "Stage 1: Traffic Source",
+        desc: "Market visitors to your link in bio through generating traffic streams from one or more social paltforms, to build brand awareness.",
+        img: "https://www.tbhcreative.com/wp-content/uploads/repeat-website-visitors.png" // Replace with real asset URLs as needed
+      },
+      {
+        title: "Stage 2: Sales Funnel",
+        desc: "Welcome visitors to a professional landing page where this turns your viewers into consumers based on what your offering and your setup.",
+        img: "https://www.salesforce.com/au/blog/wp-content/uploads/sites/4/2023/06/sales-funnel-main-image.png"
+      },
+      {
+        title: "Stage 3: Payment Gateway",
+        desc: "Intergrate a POS system to get alerted about online transactions that are processed by triggers via payment links automatically.",
+        img: "https://ai.paytabs.com/wp-content/uploads/2018/02/blog-image1.jpg"
+      },
+      {
+        title: "Stage 4: Storage Vault",
+        desc: "Complete fulfillments by dynamically giving users instant online access to digital products and or scheduling service platforms after payment.",
+        img: "https://www.k2view.com/hubfs/27bblog-1.jpg"
+      },
+      {
+        title: "Stage 5: Business Funded",
+        desc: "Digital currency is safely deposited into your business bank account, building a papertrail as more sales are generated and processed.",
+        img: "https://noobpreneur.com/wp-content/uploads/2016/06/small-business-funding.jpg"
       }
+    ];
+
+    let currentSlide = 0;
+
+    function slide(direction) {
+      currentSlide += direction;
+      
+      // Loop around
+      if (currentSlide < 0) currentSlide = curriculum.length - 1;
+      if (currentSlide >= curriculum.length) currentSlide = 0;
+
+      updateSliderUI();
     }
 
-    function updateContentCard(stepData) {
-      document.getElementById('stepBadge').innerText = stepData.badge;
-      document.getElementById('stepTitle').innerText = stepData.title;
-      document.getElementById('stepDesc').innerText = stepData.desc;
+    function updateSliderUI() {
+      const data = curriculum[currentSlide];
+      document.getElementById('sliderTitle').innerText = data.title;
+      document.getElementById('sliderDesc').innerText = data.desc;
+      
+      // Pass the standard direct source attribute cleanly
+      document.getElementById('sliderImg').src = data.img;
     }
 
-    function resetToStandby() {
-      clearNodeHighlights();
-      document.getElementById('stepBadge').innerText = "Status";
-      document.getElementById('stepTitle').innerText = "Cycle Complete";
-      document.getElementById('stepDesc').innerText = "Pipeline data loop successfully finalized. System standing by for subsequent link cycles.";
-    }
+    // Initialize values on load
+    calculateIncome();
+    updateSliderUI();
+
   </script>
 </body>
 </html>
