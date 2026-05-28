@@ -283,6 +283,83 @@
       color: #94a3b8;
       line-height: 1.4;
     }
+    
+    /* =======================================================
+   MOBILE-ONLY OVERRIDE (Separating Mobile from Desktop)
+   ======================================================= */
+@media screen and (max-width: 768px) {
+    /* 1. Global Viewport Adjustments */
+    body {
+        padding: 10px;
+        align-items: flex-start; /* Prevents vertical centering cut-offs */
+    }
+
+    /* 2. Container Consolidation */
+    .app-container {
+        padding: 20px 15px; /* Reduce heavy desktop padding */
+        border-radius: 16px;
+        border: 1px solid #1e293b; /* Thinner borders for smaller screens */
+        gap: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 3. Typography Scaling */
+    .header-block h1 {
+        font-size: 24px;
+    }
+    
+    .header-block p {
+        font-size: 14px;
+    }
+
+    /* 4. Calculator Layout (Stacking Inputs) */
+    .input-grid {
+        display: flex;
+        flex-direction: column; /* Forces inputs to stack on top of each other */
+        gap: 15px;
+    }
+
+    .input-group label {
+        font-size: 13px;
+    }
+
+    .input-group input {
+        font-size: 16px; /* 16px prevents iOS automatic zoom on focus */
+        padding: 12px;
+    }
+
+    /* 5. Results Section Formatting */
+    .results-panel {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .total-revenue {
+        font-size: 32px;
+    }
+
+    /* 6. Slider / Visuals Containment */
+    .slider-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    /* Force the image to stay inside the box */
+    #sliderImg {
+        width: 100% !important; 
+        height: auto !important;
+        max-height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    /* Ensure slider controls don't overflow */
+    .slider-controls {
+        flex-wrap: wrap; /* Allows buttons to wrap if screen is very narrow */
+        gap: 10px;
+    }
+}
+    
   </style>
 </head>
 <body>
