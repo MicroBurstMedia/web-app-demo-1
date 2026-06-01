@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MicroBurstMedia | Interlink Simulator</title>
+  <title>Interlink Simulator | Developed by MicroBurstMedia</title>
   <style>
     /* 1. GLOBAL CYBER MINIMALISM DESIGN */
     * {
@@ -28,7 +28,7 @@
       border: 2px solid #1e293b;
       border-radius: 24px;
       width: 100%;
-      max-width: 600px; /* Scales perfectly for desktop and mobile portrait */
+      max-width: 600px;
       padding: 30px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       display: flex;
@@ -74,7 +74,6 @@
       height: 100%;
     }
 
-    /* The rigid circuit board track */
     .grid-track-bg {
       fill: none;
       stroke: #1e293b;
@@ -84,13 +83,12 @@
 
     .grid-track-active {
       fill: none;
-      stroke: #10b981; /* Green to represent currency/data */
+      stroke: #10b981;
       stroke-width: 6;
       stroke-linejoin: round;
       opacity: 0.2;
     }
 
-    /* Nodes */
     .node-hub {
       fill: #0f172a;
       stroke: #334155;
@@ -112,18 +110,17 @@
       pointer-events: none;
     }
 
-    /* The moving currency particle */
     .currency-packet {
       fill: #34d399;
       filter: drop-shadow(0 0 8px #10b981) drop-shadow(0 0 16px #34d399);
-      display: none; /* Hidden until triggered */
+      display: none;
     }
 
-    /* 4. USER BOARD & ESTIMATOR HUB */
+    /* 4. USER BOARD & PROBABILITY CALCULATOR HUB */
     .user-board {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       background: #060913;
       border: 1px solid #1e293b;
       border-radius: 16px;
@@ -169,50 +166,95 @@
       box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
 
-    /* Estimator Stats */
-    .estimator-grid {
+    /* Calculator Input Formatting */
+    .calculator-inputs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      border-top: 1px solid #1e293b;
+      padding-top: 15px;
     }
 
-    .stat-box {
+    .input-box {
       background: #0f172a;
       border: 1px solid #1e293b;
       border-radius: 8px;
       padding: 12px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .stat-box label {
-      display: block;
+    .input-box label {
       font-size: 0.75rem;
       color: #64748b;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      font-weight: 600;
     }
 
-    .stat-box input {
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .input-prefix {
+      color: #64748b;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+
+    .input-box input {
       width: 100%;
       background: transparent;
       border: none;
       color: #fff;
       font-size: 1.2rem;
       font-weight: bold;
-      text-align: center;
       outline: none;
       border-bottom: 1px dashed #334155;
     }
 
-    .stat-value {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #f3f4f6;
+    /* Results Dashboard Panel */
+    .calculator-results {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .stat-income {
-      color: #34d399; /* Green for money */
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .result-value {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .result-value.highlight-green {
+      color: #10b981;
+    }
+
+    .result-value.highlight-blue {
+      color: #3b82f6;
+      font-size: 1.4rem;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .panel-divider {
+      border: 0;
+      height: 1px;
+      background: #1e293b;
     }
 
     /* 5. LEARNING MATRIX (TEXT SLIDER) */
@@ -283,83 +325,45 @@
       color: #94a3b8;
       line-height: 1.4;
     }
-    
+
     /* =======================================================
-   MOBILE-ONLY OVERRIDE (Separating Mobile from Desktop)
-   ======================================================= */
-@media screen and (max-width: 768px) {
-    /* 1. Global Viewport Adjustments */
-    body {
-        padding: 10px;
-        align-items: flex-start; /* Prevents vertical centering cut-offs */
-    }
-
-    /* 2. Container Consolidation */
-    .app-container {
-        padding: 20px 15px; /* Reduce heavy desktop padding */
-        border-radius: 16px;
-        border: 1px solid #1e293b; /* Thinner borders for smaller screens */
-        gap: 20px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-    }
-
-    /* 3. Typography Scaling */
-    .header-block h1 {
-        font-size: 24px;
-    }
-    
-    .header-block p {
-        font-size: 14px;
-    }
-
-    /* 4. Calculator Layout (Stacking Inputs) */
-    .input-grid {
-        display: flex;
-        flex-direction: column; /* Forces inputs to stack on top of each other */
+       MOBILE RESILIENCE MEDIA QUERY
+       ======================================================= */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 15px 10px;
+      }
+      .app-container {
+        padding: 20px 15px;
         gap: 15px;
-    }
-
-    .input-group label {
-        font-size: 13px;
-    }
-
-    .input-group input {
-        font-size: 16px; /* 16px prevents iOS automatic zoom on focus */
-        padding: 12px;
-    }
-
-    /* 5. Results Section Formatting */
-    .results-panel {
-        padding: 15px;
-        text-align: center;
-    }
-
-    .total-revenue {
-        font-size: 32px;
-    }
-
-    /* 6. Slider / Visuals Containment */
-    .slider-container {
-        padding: 10px;
-        margin-top: 10px;
-    }
-
-    /* Force the image to stay inside the box */
-    #sliderImg {
-        width: 100% !important; 
-        height: auto !important;
-        max-height: 250px;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-
-    /* Ensure slider controls don't overflow */
-    .slider-controls {
-        flex-wrap: wrap; /* Allows buttons to wrap if screen is very narrow */
+      }
+      .header-block h1 {
+        font-size: 1.6rem;
+      }
+      .grid-display-frame {
+        height: 240px;
+      }
+      .calculator-inputs {
+        grid-template-columns: 1fr;
         gap: 10px;
+      }
+      .result-row {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+      .learning-slider {
+        flex-direction: column;
+      }
+      .slider-btn {
+        width: 100%;
+        padding: 8px 0;
+      }
+      .slider-content {
+        flex-direction: column;
+        text-align: center;
+      }
     }
-}
-    
   </style>
 </head>
 <body>
@@ -367,8 +371,8 @@
   <div class="app-container">
     
     <div class="header-block">
-      <h1>MicroBurstMedia</h1>
-      <p>Interactive Interlink Sequence Simulator</p>
+      <h1>Interlink Simulator</h1>
+      <p>An E-Commerce Probability Sales Calculation App </p>
     </div>
 
     <div class="grid-display-frame">
@@ -401,24 +405,44 @@
         <button id="autoToggleBtn" class="btn btn-auto" onclick="toggleAutoMode()">Auto System: OFF</button>
       </div>
 
-      <div class="estimator-grid">
-        <div class="stat-box">
-          <label>Product Price</label>
-          <div style="display:flex; align-items:center; justify-content:center;">
-            <span style="color:#fff; font-size:1.2rem; font-weight:bold;">$</span>
-            <input type="number" id="priceInput" value="0" oninput="calculateIncome()">
-          </div>
-        </div>
-        <div class="stat-box">
-          <label>Sales Number</label>
-          <div class="stat-value" id="salesDisplay">0</div>
-        </div>
-        <div class="stat-box">
-          <label>Estimated Income</label>
-          <div class="stat-value stat-income" id="incomeDisplay">$0</div>
-        </div>
-      </div>
+      <div class="calculator-inputs">
+  <div class="input-box">
+    <label for="priceInput">Set Retail Price</label>
+    <div class="input-wrapper">
+      <span class="input-prefix">$</span>
+      <input type="number" id="priceInput" value="50" min="1" oninput="calculateFromPrice()">
     </div>
+  </div>
+  
+  <div class="input-box">
+    <label for="dailyGoalInput">Est. Daily Income</label>
+    <div class="input-wrapper">
+      <span class="input-prefix">$</span>
+      <input type="number" id="dailyGoalInput" value="500" min="0" oninput="calculateFromGoal()">
+    </div>
+  </div>
+</div>
+
+<div class="result-row">
+  <span>Daily Customer Conversion Count:</span>
+  <div class="result-value highlight-green" id="usersDisplay">10</div>
+</div>
+<hr class="panel-divider">
+<div class="result-row">
+  <span>Total 24-Hour Gross Earnings:</span>
+  <div class="result-value highlight-blue" id="incomeDisplay">$500.00</div>
+</div>
+
+<div class="result-row" style="font-size: 0.85rem; color: #ef4444;">
+  <span>Est. Processing Fees (2.9% + $0.30/txn):</span>
+  <div id="processingFeeDisplay">-$17.50</div>
+</div>
+<hr class="panel-divider">
+
+<div class="result-row">
+  <span>Est. Take-Home Net Payout (30 Days):</span>
+  <div class="result-value" id="monthlyDisplay" style="color: #10b981;">$14,475.00</div>
+</div>
 
     <div class="learning-slider">
       <button class="slider-btn" onclick="slide(-1)">&#10094;</button>
@@ -439,21 +463,74 @@
   </div>
 
   <script>
-    /* --- 1. ESTIMATOR HUB LOGIC --- */
-    let salesCount = 0;
-    
-    function calculateIncome() {
+    /* --- 1. SEPARATE PROBABILITY ENGINE LOGIC --- */
+    let currentUsersCount = 10; // Tracking variable memory for conversions
+
+    function calculateFromGoal() {
+      const dailyGoal = parseFloat(document.getElementById('dailyGoalInput').value) || 0;
       const price = parseFloat(document.getElementById('priceInput').value) || 0;
-      const income = price * salesCount;
-      
-      // Format with commas
-      document.getElementById('salesDisplay').innerText = salesCount.toLocaleString();
-      document.getElementById('incomeDisplay').innerText = "$" + income.toLocaleString();
+
+      if (price > 0) {
+        // Users are rounded up to the nearest whole integer
+        currentUsersCount = Math.ceil(dailyGoal / price);
+      } else {
+        currentUsersCount = 0;
+      }
+
+      renderMetrics(dailyGoal, price, currentUsersCount);
     }
 
-    function incrementSales() {
-      salesCount++;
-      calculateIncome();
+    function calculateFromPrice() {
+      const price = parseFloat(document.getElementById('priceInput').value) || 0;
+      
+      // Calculate new daily target scaling out of the tracked user parameter
+      const newDailyIncome = currentUsersCount * price;
+      
+      // Update the Daily Input text block automatically
+      document.getElementById('dailyGoalInput').value = Math.round(newDailyIncome);
+
+      renderMetrics(newDailyIncome, price, currentUsersCount);
+    }
+
+    function renderMetrics(daily, price, users) {
+  // 1. Calculate the processing fee for a SINGLE retail unit
+  let feePerUnit = 0;
+  if (price > 0) {
+    feePerUnit = (price * 0.029) + 0.30;
+  }
+
+  // 2. Determine the clean Net Profit left over from one single sale
+  const netPerUnit = Math.max(0, price - feePerUnit);
+
+  // 3. Scale the total daily processing fees based strictly on the number of conversion transactions
+  const dailyProcessingFees = feePerUnit * users;
+
+  // 4. Calculate Net Take-Home based on Net Per Unit multiplied by total conversions
+  const netDailyIncome = netPerUnit * users;
+  const netMonthlyPayout = netDailyIncome * 30;
+
+  // 5. Render Everything Out to your UI Elements
+  document.getElementById('usersDisplay').innerText = users.toLocaleString();
+  document.getElementById('incomeDisplay').innerText = "$" + daily.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  
+  // Render total accumulated processing fees for the day
+  document.getElementById('processingFeeDisplay').innerText = "-$" + dailyProcessingFees.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+  // Render the final 30-day net payout pool
+  document.getElementById('monthlyDisplay').innerText = "$" + netMonthlyPayout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+    // Fired automatically when the background automated packets hit completion point
+    function handleVisualPipelineSale() {
+      // Increments the target goal field by adding one single conversion value
+      const price = parseFloat(document.getElementById('priceInput').value) || 0;
+      const currentGoal = parseFloat(document.getElementById('dailyGoalInput').value) || 0;
+      
+      const updatedGoal = currentGoal + price;
+      document.getElementById('dailyGoalInput').value = Math.round(updatedGoal);
+      
+      // Recalculate everything out of the newly generated target goal
+      calculateFromGoal();
     }
 
 
@@ -465,14 +542,13 @@
     
     let isAnimating = false;
     let isAutoMode = false;
-    
-    // Milestones roughly calculated based on the SVG path length
+
     const nodeMilestones = [
-      { id: 1, trigger: 0.0 },   // Traffic
-      { id: 2, trigger: 0.35 },  // Triage
-      { id: 3, trigger: 0.48 },  // Stripe
-      { id: 4, trigger: 0.83 },  // Dropbox
-      { id: 5, trigger: 1.0 }    // Funded
+      { id: 1, trigger: 0.0 },
+      { id: 2, trigger: 0.35 },
+      { id: 3, trigger: 0.48 },
+      { id: 4, trigger: 0.83 },
+      { id: 5, trigger: 1.0 }
     ];
 
     function clearNodes() {
@@ -495,7 +571,7 @@
 
     function triggerRunOnce() {
       if(isAnimating) return;
-      isAutoMode = false; // Disable auto if they manually click run once
+      isAutoMode = false;
       autoBtn.classList.remove('active');
       autoBtn.innerText = "Auto System: OFF";
       animatePipeline();
@@ -509,29 +585,23 @@
 
       const trackLength = track.getTotalLength();
       let startTime = null;
-      const duration = 2500; // 2.5 seconds to cross the whole grid
+      const duration = 2500;
       let currentNodeIndex = 0;
 
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
         let progress = Math.min((timestamp - startTime) / duration, 1);
 
-        // Get exact X/Y on the path
         let currentLength = progress * trackLength;
         let point = track.getPointAtLength(currentLength);
 
         packet.setAttribute('cx', point.x);
         packet.setAttribute('cy', point.y);
 
-        // Check node collisions
         if (currentNodeIndex < nodeMilestones.length) {
           if (progress >= nodeMilestones[currentNodeIndex].trigger) {
             let nId = nodeMilestones[currentNodeIndex].id;
             document.getElementById(`node${nId}`).classList.add('active');
-            
-            // NOTE: Automatic adjustment of 'currentSlide' has been completely decoupled here
-            // so the text slider remains purely under manual customer control while system loops.
-
             currentNodeIndex++;
           }
         }
@@ -539,8 +609,8 @@
         if (progress < 1) {
           requestAnimationFrame(step);
         } else {
-          // Animation Complete
-          incrementSales(); // Add money!
+          // Visual loop completes -> fires programmatic trigger into the calculator below
+          handleVisualPipelineSale();
           packet.style.display = "none";
           
           setTimeout(() => {
@@ -548,11 +618,10 @@
             isAnimating = false;
             runOnceBtn.disabled = false;
             
-            // Loop if Auto is ON
             if(isAutoMode) {
               animatePipeline();
             }
-          }, 400); // Short pause before resetting
+          }, 400);
         }
       }
 
@@ -564,8 +633,8 @@
     const curriculum = [
       {
         title: "Stage 1: Traffic Source",
-        desc: "Market visitors to your link in bio through generating traffic streams from one or more social paltforms, to build brand awareness.",
-        img: "https://www.tbhcreative.com/wp-content/uploads/repeat-website-visitors.png" // Replace with real asset URLs as needed
+        desc: "Market visitors to your link in bio through generating traffic streams from one or more social platforms, to build brand awareness.",
+        img: "https://www.tbhcreative.com/wp-content/uploads/repeat-website-visitors.png"
       },
       {
         title: "Stage 2: Sales Funnel",
@@ -574,7 +643,7 @@
       },
       {
         title: "Stage 3: Payment Gateway",
-        desc: "Intergrate a POS system to get alerted about online transactions that are processed by triggers via payment links automatically.",
+        desc: "Integrate a POS system to get alerted about online transactions that are processed by triggers via payment links automatically.",
         img: "https://ai.paytabs.com/wp-content/uploads/2018/02/blog-image1.jpg"
       },
       {
@@ -593,11 +662,8 @@
 
     function slide(direction) {
       currentSlide += direction;
-      
-      // Loop around
       if (currentSlide < 0) currentSlide = curriculum.length - 1;
       if (currentSlide >= curriculum.length) currentSlide = 0;
-
       updateSliderUI();
     }
 
@@ -605,15 +671,12 @@
       const data = curriculum[currentSlide];
       document.getElementById('sliderTitle').innerText = data.title;
       document.getElementById('sliderDesc').innerText = data.desc;
-      
-      // Pass the standard direct source attribute cleanly
       document.getElementById('sliderImg').src = data.img;
     }
 
-    // Initialize values on load
-    calculateIncome();
+    // Default startup state runs initialization functions
+    calculateFromGoal();
     updateSliderUI();
-
   </script>
 </body>
 </html>
