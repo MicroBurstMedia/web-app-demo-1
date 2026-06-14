@@ -2,8 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-B933Q59SFQ');
+    </script>
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interlink Simulator | Developed by MicroBurstMedia</title>
+  <meta name="description" content="Optimize your business with AI Automation. Done for you by Digital Marketing Network, MicroBurstMedia.">
+    <link rel="icon" type="image/x-icon" href="https://cdn.launchcart.com/s47561/1695846294-bb2c7ca6-3563-4ba6-a820-11297c768cd2-thumb.png"> 
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "MicroBurstMedia",
+        "url": "https://microburstmedia.github.io/web-app-demo-1/",
+        "logo": "https://cdn.launchcart.com/s47561/1695846294-bb2c7ca6-3563-4ba6-a820-11297c768cd2-thumb.png",
+        "description": "Digital Marketing Network AI Automation Support Services."
+    }
+    </script>
+  
   <style>
     /* 1. GLOBAL CYBER MINIMALISM DESIGN */
     * {
@@ -164,6 +186,20 @@
       color: #060913;
       border-color: #34d399;
       box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* --- RESET BUTTON INTERFACE SPECIFICATIONS --- */
+    .btn-reset {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+    }
+
+    .btn-reset:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border-color: #ef4444;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
     }
 
     /* Calculator Input Formatting */
@@ -398,14 +434,8 @@
         <circle id="dataPacket" class="currency-packet" r="6" cx="50" cy="40" />
       </svg>
     </div>
-
-    <div class="user-board">
-      <div class="controls-row">
-        <button id="runOnceBtn" class="btn btn-run" onclick="triggerRunOnce()">Run AI Once</button>
-        <button id="autoToggleBtn" class="btn btn-auto" onclick="toggleAutoMode()">Auto System: OFF</button>
-      </div>
-
-      <div class="calculator-inputs">
+    
+    <div class="calculator-inputs">
   <div class="input-box">
     <label for="priceInput">Set Retail Price</label>
     <div class="input-wrapper">
@@ -422,8 +452,8 @@
     </div>
   </div>
 </div>
-
-<div class="result-row">
+    
+    <div class="result-row">
   <span>Daily Customer Conversion Count:</span>
   <div class="result-value highlight-green" id="usersDisplay">10</div>
 </div>
@@ -443,6 +473,12 @@
   <span>Est. Take-Home Net Payout (30 Days):</span>
   <div class="result-value" id="monthlyDisplay" style="color: #10b981;">$14,475.00</div>
 </div>
+
+    <div class="controls-row">
+        <button id="runOnceBtn" class="btn btn-run" onclick="triggerRunOnce()">Run AI Once</button>
+        <button id="resetBtn" class="btn btn-reset" onclick="triggerResetSystem()">Reset Stats</button>
+        <button id="autoToggleBtn" class="btn btn-auto" onclick="toggleAutoMode()">Auto System: OFF</button>
+      </div>
 
     <div class="learning-slider">
       <button class="slider-btn" onclick="slide(-1)">&#10094;</button>
@@ -531,6 +567,27 @@
       
       // Recalculate everything out of the newly generated target goal
       calculateFromGoal();
+    }
+    
+    /* --- RESET SYSTEM CONFIGURATION ENGINE --- */
+    function triggerResetSystem() {
+      // 1. Force kill auto mode if it is active to stop background packet generation [cite: 96]
+      if (isAutoMode) { // [cite: 96]
+        toggleAutoMode(); // [cite: 97]
+      }
+      
+      // 2. Clear out any active glowing pipeline nodes [cite: 95]
+      clearNodes(); // [cite: 95]
+      
+      // 3. Reset tracking memory variable back to zero 
+      currentUsersCount = 0; // 
+      
+      // 4. Restore default system baseline values to 0
+      document.getElementById('priceInput').value = "0";
+      document.getElementById('dailyGoalInput').value = "0";
+      
+      // 5. Force calculateFromGoal to wipe out user stats and re-render the absolute baseline view [cite: 91]
+      calculateFromGoal(); // [cite: 91]
     }
 
 
